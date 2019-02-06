@@ -1,0 +1,20 @@
+#!/bin/bash
+
+rm -rf build
+rm -rf dist
+rm -rf lib
+
+rm -rf    ./src/main/javascript
+mkdir -p  ./src/main/javascript
+cd        ./src/main/proto
+clear
+protoc --js_out=import_style=commonjs,binary:../javascript *.proto
+cd ../../../
+
+echo "---------- ProtoBuf Finished---------"
+echo ""
+
+gradle clean shadowJar build --stacktrace
+
+mkdir lib
+cp ./build/libs/*-fat.jar ./lib

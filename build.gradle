@@ -1,0 +1,189 @@
+buildscript {
+
+    repositories {
+        jcenter()
+        mavenCentral()
+        mavenLocal()
+        maven { url 'http://maven.aliyun.com/mvn/repository/' }
+        maven { url "http://clojars.org/repo" }
+        maven { url "http://repo.spring.io/libs-release" }
+        maven { url "https://plugins.gradle.org/m2/" }
+        maven { url "https://oss.sonatype.org/content/repositories/releases/" }
+    }
+
+    dependencies {
+        classpath "com.google.protobuf:protobuf-gradle-plugin:0.8.7"
+        classpath "net.ltgt.gradle:gradle-apt-plugin:0.19"
+    }
+}
+
+plugins {
+    id 'java'
+    id 'application'
+    id 'com.github.johnrengelman.shadow' version '4.0.3'
+    id "net.ltgt.apt" version "0.19"
+}
+
+mainClassName = 'io.vertx.core.Launcher'
+
+def watchForChange = 'src/**/*'
+def doOnChange = './gradlew classes'
+
+apply plugin: "java"
+apply plugin: "idea"
+apply plugin: "com.google.protobuf"
+apply plugin: "maven"
+apply plugin: "net.ltgt.apt"
+
+repositories {
+    jcenter()
+    mavenCentral()
+    mavenLocal()
+    maven { url 'http://maven.aliyun.com/mvn/repository/' }
+    maven { url "http://clojars.org/repo" }
+    maven { url "http://repo.spring.io/libs-release" }
+    maven { url "https://plugins.gradle.org/m2/" }
+    maven { url "https://oss.sonatype.org/content/repositories/releases/" }
+}
+
+dependencies {
+    annotationProcessor "com.google.dagger:dagger-compiler:$latestVersion"
+    compile(
+            "io.vertx:vertx-core:$vertxVersion",
+            "io.vertx:vertx-web:$vertxVersion",
+            "io.vertx:vertx-rx-java2:$vertxVersion",
+            "io.reactivex.rxjava2:rxjava:$latestVersion",
+            "io.vertx:vertx-web-api-contract:$latestVersion",
+
+            // Google
+            "com.google.code.gson:gson:$latestVersion",
+            // ProtoBuf
+            "com.google.protobuf:protobuf-java:$latestVersion",
+            "com.google.protobuf:protobuf-java-util:$latestVersion",
+            "com.google.errorprone:error_prone_annotations:$latestVersion",
+            "com.googlecode.protobuf-java-format:protobuf-java-format:1.2",
+            // dagger
+            "com.google.dagger:dagger:$latestVersion",
+            "com.google.guava:guava:$latestVersion",
+
+            // 简单加密 - HashID - 生成数字的简单加密
+            "org.hashids:hashids:$latestVersion",
+
+            // 读取配置信息 - TOML
+            "com.moandjiezana.toml:toml4j:$latestVersion",
+
+            // 日志框架 - SLF4J
+            "org.slf4j:slf4j-api:1.7.25",
+            "org.slf4j:slf4j-ext:1.7.25",
+            "org.apache.logging.log4j:log4j-api:$latestVersion",
+            "org.apache.logging.log4j:log4j-jcl:$latestVersion",
+            "org.apache.logging.log4j:log4j-jul:$latestVersion",
+            "org.apache.logging.log4j:log4j-core:$latestVersion",
+            "org.apache.logging.log4j:log4j-slf4j-impl:$latestVersion",
+            "commons-logging:commons-logging:$latestVersion",
+            // 阿里云日志服务
+            "com.aliyun.openservices:aliyun-log:$latestVersion",
+            "com.aliyun.openservices:log-loghub-producer:$latestVersion",
+            "com.aliyun.openservices:aliyun-log-log4j2-appender:$latestVersion",
+            "com.aliyun.openservices:loghub-client-lib:$latestVersion",
+            
+            // 分布式缓存 -  Redis 驱动 + Java 集合
+//            "org.redisson:redisson:$latestVersion",
+            "org.msgpack:msgpack-core:$latestVersion",
+            "org.msgpack:jackson-dataformat-msgpack:$latestVersion",
+            // 在 Redis 存储时使用的编码格式 Kryo
+            "com.esotericsoftware:kryo:4.0.2",
+            "net.openhft:zero-allocation-hashing:$latestVersion",
+            "org.objenesis:objenesis:$latestVersion",
+            "io.projectreactor:reactor-core:$latestVersion",
+
+            // 分布式缓存 -  Redis 驱动
+            "io.lettuce:lettuce-core:$latestVersion",
+
+            // 数据库访问 - JDBI
+            "org.jdbi:jdbi:$latestVersion",
+            // 数据库访问 - MySQL
+            "mysql:mysql-connector-java:$latestVersion",
+            // 数据库连接池
+            "com.zaxxer:HikariCP:$latestVersion",
+
+            // Square - REST Client
+            "com.squareup.okio:okio:$latestVersion",
+            "com.squareup.okhttp3:okhttp:$latestVersion",
+            "com.squareup.retrofit2:retrofit:$latestVersion",
+            "com.squareup.retrofit2:converter-gson:$latestVersion",
+            "com.squareup.retrofit2:converter-guava:$latestVersion",
+            "com.squareup.retrofit2:converter-java8:$latestVersion",
+            "com.squareup.retrofit2:converter-jackson:$latestVersion",
+            "com.squareup.retrofit2:converter-scalars:$latestVersion",
+            "com.squareup.retrofit2:converter-protobuf:$latestVersion",
+            "com.squareup.retrofit2:adapter-java8:$latestVersion",
+            "com.squareup.retrofit2:adapter-guava:$latestVersion",
+            "com.squareup.retrofit2:adapter-rxjava2:$latestVersion",
+
+            // 辅助框架 - servlet
+            "javax.servlet:javax.servlet-api:$latestVersion",
+
+            // 阿里云 - 通用类库
+            "com.aliyun:aliyun-java-sdk-core:$latestVersion",
+            // 阿里云 - 对象存储
+            "com.aliyun.oss:aliyun-sdk-oss:$latestVersion",
+            // 阿里云 STS
+            "com.aliyun:aliyun-java-sdk-sts:$latestVersion",
+            // 阿里云 - 消息服务
+            "com.aliyun.mns:aliyun-sdk-mns:$latestVersion",
+
+            // Caffeine - 本地缓存框架
+            "com.github.ben-manes.caffeine:caffeine:$latestVersion",
+
+            // Disruptor - 进程内的消息处理
+            "com.lmax:disruptor:$latestVersion",
+
+    )
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    testCompile "io.vertx:vertx-unit:$latestVersion"
+}
+
+protobuf {
+    protoc {
+        artifact = "com.google.protobuf:protoc:$latestVersion"
+    }
+}
+
+idea {
+    module {
+        sourceDirs += file("${projectDir}/build/generated/source/proto/main/java")
+        sourceDirs += file("${projectDir}/build/generated/source/apt/main")
+    }
+}
+
+task taskJar(type: Jar, dependsOn: compileJava) {
+    from 'build/classes'
+    destinationDir = file('build/libs')
+}
+
+shadowJar {
+    classifier = 'fat'
+    manifest {
+        attributes "Main-Verticle": mainVerticleName
+    }
+    mergeServiceFiles {
+        include 'META-INF/services/io.vertx.core.spi.VerticleFactory'
+    }
+}
+
+run {
+    args = ['run', mainVerticleName, "--redeploy=$watchForChange", "--launcher-class=$mainClassName", "--on-redeploy=$doOnChange"]
+}
+//
+//task copyJars(type: Copy) {
+//    from configurations.runtime
+//    into 'dist' // 目标位置
+//}
+//
+//task release(type: Copy) {
+//    from('build/libs') {
+//        include '*.jar'
+//    }
+//    into('dist')
+//}
