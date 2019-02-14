@@ -1,0 +1,13 @@
+#!/bin/bash
+name='member'
+upper='Member'
+
+rm -rf $name
+cp -r dictionary $name
+cd $name
+perl -p -i -e "s/Dictionary/$upper/g" ./*
+perl -p -i -e "s/dictionary/$name/g" ./*
+mv BotDictionary.java 'Bot'$upper'.java'
+cd ..
+
+echo '代码生成完毕.'

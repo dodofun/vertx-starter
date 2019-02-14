@@ -124,7 +124,6 @@ public final class Modules {
         config.setJdbcUrl(connUrl);
         config.setUsername(username);
         config.setPassword(password);
-        config.setPoolName("dodo");
         // 自动commit
         config.setAutoCommit(true);
         // 数据库连接超时时间
@@ -133,7 +132,8 @@ public final class Modules {
         config.setIdleTimeout(toml.getLong("mysql.idleTimeout", 600000l));
         // 池中连接的最长生命周期
         config.setMaxLifetime(toml.getLong("mysql.maxLifetime", 1800000l));
-        // 池到达的最大大小
+        // 连接池大小
+        config.setMinimumIdle(toml.getLong("mysql.minimumIdle", 10l).intValue());
         config.setMaximumPoolSize(toml.getLong("mysql.maximumPoolSize", 10l).intValue());
 
         config.addDataSourceProperty("cachePrepStmts", true);

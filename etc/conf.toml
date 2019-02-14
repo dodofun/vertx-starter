@@ -43,9 +43,10 @@ title = "Configuration"
     password = "DODO.fun2018"
     database = "dodo"
     driver_name = "com.mysql.jdbc.Driver"
-    timeout = 5000
+    timeout = 30000
     idleTimeout = 600000
-    maxLifetime = 1800000
+    maxLifetime = 700000
+    minimumIdle = 10
     maximumPoolSize = 10
 
 [MNS]
