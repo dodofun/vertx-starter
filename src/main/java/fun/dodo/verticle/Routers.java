@@ -7,6 +7,7 @@ import fun.dodo.common.Options;
 import fun.dodo.common.meta.Log;
 import fun.dodo.common.meta.LogType;
 
+import fun.dodo.verticle.bots.BotDictionary;
 import fun.dodo.verticle.rest.MnsSendService;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.reactivex.core.WorkerExecutor;
@@ -75,6 +76,9 @@ public final class Routers {
         // DEMO V2
         final BotDemo botDemo = builder.botDemo();
         botDemo.register(router, executor);
+
+        final BotDictionary botDictionary = builder.botDictionary();
+        botDictionary.register(router, executor);
 
     }
 
