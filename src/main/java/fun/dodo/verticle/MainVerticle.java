@@ -12,7 +12,6 @@ public class MainVerticle extends AbstractVerticle {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MainVerticle.class);
 
-
     @Override
     public void start(Future<Void> startFuture) {
 

@@ -14,7 +14,7 @@ cd ../../../
 echo "---------- ProtoBuf Finished---------"
 echo ""
 
-gradle clean shadowJar build --stacktrace
+gradle clean build copyJars release
 
 mkdir lib
 cp ./build/libs/*-fat.jar ./lib

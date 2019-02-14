@@ -45,7 +45,7 @@ title = "Configuration"
     driver_name = "com.mysql.jdbc.Driver"
     timeout = 30000
     idleTimeout = 600000
-    maxLifetime = 700000
+    maxLifetime = 100000
     minimumIdle = 10
     maximumPoolSize = 10
 

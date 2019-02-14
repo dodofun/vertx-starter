@@ -175,15 +175,15 @@ shadowJar {
 run {
     args = ['run', mainVerticleName, "--redeploy=$watchForChange", "--launcher-class=$mainClassName", "--on-redeploy=$doOnChange"]
 }
-//
-//task copyJars(type: Copy) {
-//    from configurations.runtime
-//    into 'dist' // 目标位置
-//}
-//
-//task release(type: Copy) {
-//    from('build/libs') {
-//        include '*.jar'
-//    }
-//    into('dist')
-//}
+
+task copyJars(type: Copy) {
+    from configurations.runtime
+    into 'dist' // 目标位置
+}
+
+task release(type: Copy) {
+    from('build/libs') {
+        exclude '*fat.jar'
+    }
+    into('dist')
+}
