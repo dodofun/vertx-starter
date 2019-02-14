@@ -114,7 +114,6 @@ public final class Modules {
         final String username = toml.getString("mysql.username", "");
         final String password = toml.getString("mysql.password", "");
         final String database = toml.getString("mysql.database", "");
-        final String driverName = toml.getString("mysql.driver_name", "com.mysql.jdbc.Driver");
 
         // 设置数据库URL
         final String connUrl = "jdbc:mysql://" + host + ":" + port + "/" + database
@@ -123,8 +122,6 @@ public final class Modules {
 
         HikariConfig config = new HikariConfig();
         config.setJdbcUrl(connUrl);
-//    config.setDriverClassName(driverName);
-//    config.setDataSourceClassName("com.mysql.cj.jdbc.MysqlDataSource");
         config.setUsername(username);
         config.setPassword(password);
         config.setPoolName("dodo");

@@ -1,5 +1,6 @@
 package fun.dodo.verticle.bots;
 
+import com.google.protobuf.Descriptors;
 import fun.dodo.common.help.ReqHelper;
 import fun.dodo.common.interfaces.BotBase;
 import fun.dodo.common.meta.Dictionary;
@@ -17,11 +18,14 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.time.Instant;
 
 import static fun.dodo.common.Constants.*;
 import static fun.dodo.common.help.ReqHelper.getParamSafeIntegerValue;
 import static fun.dodo.common.help.ReqHelper.getParamSafeLongValue;
+import static fun.dodo.common.help.ReqHelper.getParamStringValue;
 import static fun.dodo.common.help.ResHelper.*;
 import static io.vertx.reactivex.ext.web.api.validation.ParameterTypeValidator.createLongTypeValidator;
 import static org.apache.http.HttpStatus.SC_OK;
@@ -42,6 +46,7 @@ public final class BotDictionary implements BotBase {
 
     final static String OWNER_ID = "ownerId";
     final static String ID = "id";
+    final static String PROP = "prop";
     final static String INDEX = "index";
     final static String SIZE = "size";
 
@@ -96,6 +101,7 @@ public final class BotDictionary implements BotBase {
             final long ownerId = Long.valueOf(context.pathParam(OWNER_ID));
             final long id = Long.valueOf(context.pathParam(ID));
 
+            // body 参数格式
             final String contentType = request.getHeader(CONTENT_TYPE);
 
             Dictionary message = getMessage(contentType, context);
@@ -126,8 +132,8 @@ public final class BotDictionary implements BotBase {
     }
 
     /**
-     * 更新 - PUT /owner/:ownerId/dictionary/:id
-     *
+     * 更新 - PUT /owner/:ownerId/dictionary/:id?prop=type
+     * prop 不为空时，只更新指定属性值
      * @param context: HTTP 路由上下文
      */
     @Override
@@ -138,6 +144,9 @@ public final class BotDictionary implements BotBase {
             final long ownerId = Long.valueOf(context.pathParam(OWNER_ID));
             final long id = Long.valueOf(context.pathParam(ID));
 
+            final String prop = getParamStringValue(request, PROP);
+
+            // body 参数格式
             final String contentType = request.getHeader(CONTENT_TYPE);
 
             Dictionary dictionary = data.get(ownerId, id);
@@ -150,15 +159,34 @@ public final class BotDictionary implements BotBase {
 
             if (null != message) {
 
-                // TODO body 参数验证
-                if (ReqHelper.wrongString(context, message.getName(), "Name 不能为空")) {
-                    return;
-                }
+                Dictionary.Builder builder;
 
-                Dictionary.Builder builder = message.toBuilder();
-                builder.setCreatedAt(dictionary.getCreatedAt())
-                        .setUpdatedAt(Instant.now().toEpochMilli())
-                        .setId(id).setOwnerId(ownerId);
+                if (null != prop && !prop.isEmpty()) {
+
+                    // 更新指定属性
+                    builder = dictionary.toBuilder();
+                    builder.setUpdatedAt(Instant.now().toEpochMilli());
+
+                    // 属性首字母大写
+                    String titleCaseProp = (new StringBuilder()).append(Character.toUpperCase(prop.charAt(0))).append(prop.substring(1)).toString();
+
+                    Method getField = builder.getClass().getMethod("get" + titleCaseProp);
+                    Method setField = builder.getClass().getMethod("set" + titleCaseProp, getField.getReturnType());
+
+                    Object value = getField.invoke(message.toBuilder());
+
+                    // 设置属性值
+                    setField.invoke(builder, value);
+
+                } else {
+
+                    // 更新全部
+                    builder = message.toBuilder();
+                    builder.setCreatedAt(dictionary.getCreatedAt())
+                            .setUpdatedAt(Instant.now().toEpochMilli())
+                            .setId(id).setOwnerId(ownerId);
+
+                }
 
                 // 持久化存储
                 data.update(builder.build());
