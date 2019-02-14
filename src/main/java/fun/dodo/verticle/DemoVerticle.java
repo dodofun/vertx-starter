@@ -1,7 +1,6 @@
 package fun.dodo.verticle;
 
 import dagger.Component;
-import fun.dodo.verticle.bots.BotDemo;
 import fun.dodo.common.Options;
 import fun.dodo.verticle.acts.DataStream;
 import fun.dodo.verticle.bots.BotConsumer;
@@ -34,8 +33,6 @@ public class DemoVerticle extends AbstractVerticle {
         DataStream dataStream();
 
         BotConsumer botConsumer();
-
-        BotDemo botDemo();
 
         BotDictionary botDictionary();
     }

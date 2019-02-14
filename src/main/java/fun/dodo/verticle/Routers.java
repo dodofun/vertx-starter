@@ -2,13 +2,11 @@ package fun.dodo.verticle;
 
 import com.aliyun.openservices.log.common.LogItem;
 import fun.dodo.common.help.*;
-import fun.dodo.verticle.bots.BotDemo;
 import fun.dodo.common.Options;
 import fun.dodo.common.meta.Log;
 import fun.dodo.common.meta.LogType;
 
 import fun.dodo.verticle.bots.BotDictionary;
-import fun.dodo.verticle.rest.MnsSendService;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.reactivex.core.WorkerExecutor;
 import io.vertx.reactivex.core.http.HttpServerRequest;
@@ -72,10 +70,6 @@ public final class Routers {
         router.get("/id").handler(ctx -> {
            ctx.response().end("TEST");
         });
-
-        // DEMO V2
-        final BotDemo botDemo = builder.botDemo();
-        botDemo.register(router, executor);
 
         final BotDictionary botDictionary = builder.botDictionary();
         botDictionary.register(router, executor);
