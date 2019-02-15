@@ -73,13 +73,13 @@ dependencies {
             "com.moandjiezana.toml:toml4j:$latestVersion",
 
             // 日志框架 - SLF4J
-            "org.slf4j:slf4j-api:1.7.25",
-            "org.slf4j:slf4j-ext:1.7.25",
-            "org.apache.logging.log4j:log4j-api:$latestVersion",
-            "org.apache.logging.log4j:log4j-jcl:$latestVersion",
-            "org.apache.logging.log4j:log4j-jul:$latestVersion",
-            "org.apache.logging.log4j:log4j-core:$latestVersion",
-            "org.apache.logging.log4j:log4j-slf4j-impl:$latestVersion",
+            "org.slf4j:slf4j-api:$slf4jVersion",
+            "org.slf4j:slf4j-ext:$slf4jVersion",
+            "org.apache.logging.log4j:log4j-api:$log4jVersion",
+            "org.apache.logging.log4j:log4j-jcl:$log4jVersion",
+            "org.apache.logging.log4j:log4j-jul:$log4jVersion",
+            "org.apache.logging.log4j:log4j-core:$log4jVersion",
+            "org.apache.logging.log4j:log4j-slf4j-impl:$log4jVersion",
             "commons-logging:commons-logging:$latestVersion",
             // 阿里云日志服务
             "com.aliyun.openservices:aliyun-log:$latestVersion",
@@ -143,6 +143,29 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile "io.vertx:vertx-unit:$latestVersion"
 }
+
+// See: http://docs.oracle.com/javase/8/docs/technotes/tools/windows/javac.html#BHCJCABJ
+compileJava.options*.compilerArgs = [
+        '-Xlint:cast',
+        '-Xlint:classfile',
+        '-Xlint:deprecation',
+        '-Xlint:divzero',
+        '-Xlint:dep-ann',
+        '-Xlint:empty',
+        '-Xlint:fallthrough',
+        '-Xlint:finally',
+        '-Xlint:overrides',
+        '-Xlint:path',
+        '-Xlint:processing',
+        '-Xlint:rawtypes',
+        '-Xlint:serial',
+        '-Xlint:static',
+        '-Xlint:try',
+        '-Xlint:unchecked',
+        '-Xlint:varargs',
+        '-Xlint:-options',
+        '-Xlint:-overrides'
+]
 
 protobuf {
     protoc {
