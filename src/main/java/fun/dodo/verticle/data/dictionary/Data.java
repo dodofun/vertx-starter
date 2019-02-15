@@ -98,7 +98,7 @@ public final class Data {
                     list.add(entity);
                 }
             });
-            builder.addAllObject((List) list);
+            builder.addAllObject((ArrayList) list);
 
         } else {
             LOGGER.info("Redis 缺乏数据 (Dictionary List), 尝试从 MySQL 内获取 ***");
@@ -113,9 +113,9 @@ public final class Data {
                 if (start < list.size()) {
                     builder.setCount(list.size());
                     if (end < list.size())
-                        builder.addAllObject((List) list.subList(start, end)).build();
+                        builder.addAllObject((ArrayList) list.subList(start, end)).build();
                     else
-                        builder.addAllObject((List) list.subList(start, list.size())).build();
+                        builder.addAllObject((ArrayList) list.subList(start, list.size())).build();
                 }
             }
         }

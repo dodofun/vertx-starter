@@ -1,209 +1,114 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<Configuration status="INFO">
+<Configuration status="WARN">
     <Properties>
         <Property name="LOG_HOME">../log</Property>
         <property name="FILE_NAME">app</property>
     </Properties>
 
     <!--先定义所有的appender-->
-    <!--<Appenders>-->
-    <!--&lt;!&ndash;这个输出控制台的配置&ndash;&gt;-->
-    <!--<Console name="Console" target="SYSTEM_OUT">-->
-    <!--&lt;!&ndash;控制台只输出level及以上级别的信息（onMatch），其他的直接拒绝（onMismatch）&ndash;&gt;-->
-    <!--<ThresholdFilter level="trace" onMatch="ACCEPT" onMismatch="DENY"/>-->
-    <!--&lt;!&ndash;这个都知道是输出日志的格式&ndash;&gt;-->
-    <!--<PatternLayout pattern="%d{HH:mm:ss.SSS} %-5level %class{36} %L %M - %msg%xEx%n"/>-->
-    <!--</Console>-->
-
-    <!--&lt;!&ndash;文件会打印出所有信息，这个log每次运行程序会自动清空，由append属性决定，适合临时测试用&ndash;&gt;-->
-    <!--<File name="TestLog" append="false"-->
-    <!--fileName="${LOG_HOME}/test.log">-->
-    <!--<PatternLayout pattern="%d{HH:mm:ss.SSS} %-5level %class{36} %L %M - %msg%xEx%n"/>-->
-    <!--</File>-->
-
-    <!--&lt;!&ndash;单独记录错误情况&ndash;&gt;-->
-    <!--<File name="ErrorLog"-->
-    <!--fileName="${LOG_HOME}/err.log">-->
-    <!--<ThresholdFilter level="ERROR" onMatch="ACCEPT" onMismatch="DENY"/>-->
-    <!--<PatternLayout pattern="%d{HH:mm:ss.SSS} %-5level %class{36} %L %M - %msg%xEx%n"/>-->
-    <!--</File>-->
-
-    <!--&lt;!&ndash;这个会打印出所有的信息，每次大小超过size，则这size大小的日志会自动存入按年份-月份建立的文件夹下面并进行压缩，作为存档&ndash;&gt;-->
-    <!--<RollingFile name="RollingFile"-->
-    <!--fileName="${LOG_HOME}/${FILE_NAME}.log"-->
-    <!--filePattern="${LOG_HOME}/$${date:yyyy-MM}/${FILE_NAME}-%d{yyyy-MM-dd}-%i.log.gz">-->
-    <!--<PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %class{36} %L %M - %msg%xEx%n"/>-->
-    <!--<SizeBasedTriggeringPolicy size="20MB"/>-->
-    <!--</RollingFile>-->
-
-    <!--<Async name="AsyncLog">-->
-    <!--<AppenderRef ref="Console"/>-->
-    <!--<AppenderRef ref="TestLog"/>-->
-    <!--<AppenderRef ref="ErrorLog"/>-->
-    <!--<AppenderRef ref="RollingFile"/>-->
-    <!--</Async>-->
-    <!--</Appenders>-->
-
-
-    <!--&lt;!&ndash;然后定义logger，只有定义了logger并引入的appender，appender才会生效&ndash;&gt;-->
-    <!--<Loggers>-->
-
-    <!--&lt;!&ndash;建立一个默认的root的logger&ndash;&gt;-->
-    <!--<Root level="WARN">-->
-    <!--<AppenderRef ref="AsyncLog"/>-->
-    <!--</Root>-->
-
-    <!--&lt;!&ndash;建立一个特定程序包的logger, 指定 additivity="false" 可以避免输出2次&ndash;&gt;-->
-    <!--<Logger name="fun.dodo.verticle" level="INFO" additivity="false">-->
-    <!--<AppenderRef ref="AsyncLog"/>-->
-    <!--</Logger>-->
-
-    <!--<Logger name="io.netty" level="ERROR" additivity="false">-->
-    <!--<AppenderRef ref="AsyncLog"/>-->
-    <!--</Logger>-->
-
-    <!--<Logger name="sun.nio" level="ERROR" additivity="false">-->
-    <!--<AppenderRef ref="AsyncLog"/>-->
-    <!--</Logger>-->
-
-    <!--<Logger name="java.io" level="ERROR" additivity="false">-->
-    <!--<AppenderRef ref="AsyncLog"/>-->
-    <!--</Logger>-->
-
-    <!--</Loggers>-->
-
     <Appenders>
-        <Loghub name="loghubAppender1"
-                projectName="dodo-demo"
-                logstore="application_err_log"
-                endpoint="http://dodo-demo.cn-beijing.log.aliyuncs.com"
-                accessKeyId="LTAICWWsWX6u2qJ9"
-                accessKey="1YsL1rKknuAwoRDSskG1VwBELgFuLc"
-                packageTimeoutInMS="3000"
-                logsCountPerPackage="4096"
-                logsBytesPerPackage="3145728"
-                memPoolSizeInByte="104857600"
-                retryTimes="3"
-                maxIOThreadSizeInPool="8"
-                topic="DODO DEMO"
-                source=""
-                timeFormat="yyyy-MM-dd'T'HH:mmZ"
-                timeZone="UTC"
-                ignoreExceptions="true">
-            <PatternLayout pattern="%d %-5level [%thread] %logger{0}: %msg"/>
-        </Loghub>
-        <Loghub name="loghubAppender2"
-                projectName="dodo-demo"
-                logstore="application_log"
-                endpoint="http://dodo-demo.cn-beijing.log.aliyuncs.com"
-                accessKeyId="LTAICWWsWX6u2qJ9"
-                accessKey="1YsL1rKknuAwoRDSskG1VwBELgFuLc"
-                packageTimeoutInMS="3000"
-                logsCountPerPackage="4096"
-                logsBytesPerPackage="3145728"
-                memPoolSizeInByte="104857600"
-                retryTimes="3"
-                maxIOThreadSizeInPool="8"
-                topic="DODO DEMO"
-                source=""
-                timeFormat="yyyy-MM-dd'T'HH:mmZ"
-                timeZone="UTC"
-                ignoreExceptions="true">
-            <PatternLayout
-                    pattern="%d{HH:mm:ss.SSS} %-5level %class{36} %L %M"/>
-            <Filters>
-                <!-- Now deny warn, error and fatal messages -->
-                <ThresholdFilter level="warn" onMatch="DENY" onMismatch="NEUTRAL"/>
-                <ThresholdFilter level="error" onMatch="DENY" onMismatch="NEUTRAL"/>
-                <ThresholdFilter level="fatal" onMatch="DENY" onMismatch="NEUTRAL"/>
+        <!--这个输出控制台的配置-->
+        <!--<Console name="Console" target="SYSTEM_OUT">-->
+            <!--&lt;!&ndash;控制台只输出level及以上级别的信息（onMatch），其他的直接拒绝（onMismatch）&ndash;&gt;-->
+            <!--<ThresholdFilter level="trace" onMatch="ACCEPT" onMismatch="DENY"/>-->
+            <!--&lt;!&ndash;这个都知道是输出日志的格式&ndash;&gt;-->
+            <!--<PatternLayout pattern="%d{HH:mm:ss.SSS} %-5level %class{36} %L %M - %msg%xEx%n"/>-->
+        <!--</Console>-->
 
-                <!-- This filter accepts info, warn, error, fatal and denies debug/trace -->
-                <ThresholdFilter level="info" onMatch="ACCEPT" onMismatch="DENY"/>
-            </Filters>
+        <!--&lt;!&ndash;文件会打印出所有信息，这个log每次运行程序会自动清空，由append属性决定，适合临时测试用&ndash;&gt;-->
+        <!--<File name="TestLog" append="false"-->
+              <!--fileName="${LOG_HOME}/test.log">-->
+            <!--<PatternLayout pattern="%d{HH:mm:ss.SSS} %-5level %class{36} %L %M - %msg%xEx%n"/>-->
+        <!--</File>-->
+
+        <!--&lt;!&ndash;单独记录错误情况&ndash;&gt;-->
+        <!--<File name="ErrorLog"-->
+              <!--fileName="${LOG_HOME}/err.log">-->
+            <!--<ThresholdFilter level="ERROR" onMatch="ACCEPT" onMismatch="DENY"/>-->
+            <!--<PatternLayout pattern="%d{HH:mm:ss.SSS} %-5level %class{36} %L %M - %msg%xEx%n"/>-->
+        <!--</File>-->
+
+        <!--&lt;!&ndash;这个会打印出所有的信息，每次大小超过size，则这size大小的日志会自动存入按年份-月份建立的文件夹下面并进行压缩，作为存档&ndash;&gt;-->
+        <!--<RollingFile name="RollingFile"-->
+                     <!--fileName="${LOG_HOME}/${FILE_NAME}.log"-->
+                     <!--filePattern="${LOG_HOME}/$${date:yyyy-MM}/${FILE_NAME}-%d{yyyy-MM-dd}-%i.log.gz">-->
+            <!--<PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %class{36} %L %M - %msg%xEx%n"/>-->
+            <!--<SizeBasedTriggeringPolicy size="20MB"/>-->
+        <!--</RollingFile>-->
+
+        <!--<Async name="AsyncLog">-->
+            <!--<AppenderRef ref="Console"/>-->
+            <!--<AppenderRef ref="TestLog"/>-->
+            <!--<AppenderRef ref="ErrorLog"/>-->
+            <!--<AppenderRef ref="RollingFile"/>-->
+        <!--</Async>-->
+
+        <!--阿里云日志采集-->
+        <Loghub name="application-log"
+                projectName="dodo-vr"
+                logstore="dodo-vr-application-log"
+                endpoint="dodo-vr.cn-beijing.log.aliyuncs.com"
+                accessKeyId="LTAI2vwu946b2kgi"
+                accessKey="XntP7OBBPl4gBaPAKE22in3wigOEFQ"
+                packageTimeoutInMS="3000"
+                logsCountPerPackage="4096"
+                logsBytesPerPackage="3145728"
+                memPoolSizeInByte="104857600"
+                retryTimes="3"
+                maxIOThreadSizeInPool="8"
+                topic="DODO VR API"
+                source=""
+                timeFormat="yyyy-MM-dd'T'HH:mm:ssZ"
+                timeZone="UTC"
+                ignoreExceptions="true">
+            <!--<PatternLayout pattern="%d{HH:mm:ss.SSS} %-5level %class{36} %L %M - %msg%xEx"/>-->
+            <!--<Filters>-->
+                <!--&lt;!&ndash; Now deny warn, error and fatal messages &ndash;&gt;-->
+                <!--<ThresholdFilter level="warn"  onMatch="DENY"   onMismatch="NEUTRAL"/>-->
+                <!--<ThresholdFilter level="error" onMatch="DENY"   onMismatch="NEUTRAL"/>-->
+                <!--<ThresholdFilter level="fatal" onMatch="DENY"   onMismatch="NEUTRAL"/>-->
+
+                <!--&lt;!&ndash; This filter accepts info, warn, error, fatal and denies debug/trace &ndash;&gt;-->
+                <!--<ThresholdFilter level="info"  onMatch="ACCEPT" onMismatch="DENY"/>-->
+            <!--</Filters>-->
         </Loghub>
         <Console name="STDOUT" target="SYSTEM_OUT">
             <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
         </Console>
-
-        <!--这个输出控制台的配置-->
-        <Console name="Console" target="SYSTEM_OUT">
-            <!--控制台只输出level及以上级别的信息（onMatch），其他的直接拒绝（onMismatch）-->
-            <ThresholdFilter level="trace" onMatch="ACCEPT" onMismatch="DENY"/>
-            <!--这个都知道是输出日志的格式-->
-            <PatternLayout pattern="%d{HH:mm:ss.SSS} %-5level %class{36} %L %M - %msg%xEx%n"/>
-        </Console>
-
-        <!--文件会打印出所有信息，这个log每次运行程序会自动清空，由append属性决定，适合临时测试用-->
-        <File name="TestLog" append="false"
-              fileName="${LOG_HOME}/test.log">
-            <PatternLayout pattern="%d{HH:mm:ss.SSS} %-5level %class{36} %L %M - %msg%xEx%n"/>
-        </File>
-
-        <!--单独记录错误情况-->
-        <File name="ErrorLog"
-              fileName="${LOG_HOME}/err.log">
-            <ThresholdFilter level="ERROR" onMatch="ACCEPT" onMismatch="DENY"/>
-            <PatternLayout pattern="%d{HH:mm:ss.SSS} %-5level %class{36} %L %M - %msg%xEx%n"/>
-        </File>
-
-        <!--这个会打印出所有的信息，每次大小超过size，则这size大小的日志会自动存入按年份-月份建立的文件夹下面并进行压缩，作为存档-->
-        <RollingFile name="RollingFile"
-                     fileName="${LOG_HOME}/${FILE_NAME}.log"
-                     filePattern="${LOG_HOME}/$${date:yyyy-MM}/${FILE_NAME}-%d{yyyy-MM-dd}-%i.log.gz">
-            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %class{36} %L %M - %msg%xEx%n"/>
-            <SizeBasedTriggeringPolicy size="20MB"/>
-        </RollingFile>
-
-        <Async name="AsyncLog">
-            <AppenderRef ref="Console"/>
-            <AppenderRef ref="TestLog"/>
-            <AppenderRef ref="ErrorLog"/>
-            <AppenderRef ref="RollingFile"/>
-        </Async>
-
     </Appenders>
+
+
+    <!--然后定义logger，只有定义了logger并引入的appender，appender才会生效-->
     <Loggers>
-        <Root level="DEBUG">
-            <AppenderRef ref="loghubAppender1" level="WARN"/>
-            <AppenderRef ref="loghubAppender2" level="INFO"/>
-            <AppenderRef ref="STDOUT" level="INFO"/>
+
+        <!--建立一个默认的root的logger-->
+        <Root level="INFO">
+            <!--<AppenderRef ref="AsyncLog"/>-->
+            <AppenderRef ref="application-log"/>
+            <AppenderRef ref="STDOUT"/>
         </Root>
 
         <!--建立一个特定程序包的logger, 指定 additivity="false" 可以避免输出2次-->
-        <Logger name="fun.dodo" level="INFO" additivity="false">
-            <AppenderRef ref="AsyncLog"/>
-        </Logger>
+        <!--<Logger name="fun.dodo" level="INFO" additivity="false">-->
+            <!--<AppenderRef ref="AsyncLog"/>-->
+        <!--</Logger>-->
 
-        <Logger name="io.netty" level="ERROR" additivity="false">
-            <AppenderRef ref="AsyncLog"/>
-        </Logger>
+        <!--<Logger name="io.netty" level="ERROR" additivity="false">-->
+            <!--<AppenderRef ref="AsyncLog"/>-->
+        <!--</Logger>-->
 
-        <Logger name="sun.nio" level="ERROR" additivity="false">
-            <AppenderRef ref="AsyncLog"/>
-        </Logger>
+        <!--<Logger name="sun.nio" level="ERROR" additivity="false">-->
+            <!--<AppenderRef ref="AsyncLog"/>-->
+        <!--</Logger>-->
 
-        <Logger name="java.io" level="ERROR" additivity="false">
-            <AppenderRef ref="AsyncLog"/>
-        </Logger>
+        <!--<Logger name="java.io" level="ERROR" additivity="false">-->
+            <!--<AppenderRef ref="AsyncLog"/>-->
+        <!--</Logger>-->
 
-        <Logger name="io.vertx" level="ERROR" additivity="false">
-            <AppenderRef ref="AsyncLog"/>
-        </Logger>
-
-        <Logger name="com.aliyun" level="ERROR" additivity="false">
-            <AppenderRef ref="AsyncLog"/>
-        </Logger>
-
-        <Logger name="io.lettuce" level="ERROR" additivity="false">
-            <AppenderRef ref="AsyncLog"/>
-        </Logger>
-
-        <Logger name="com.zaxxer" level="ERROR" additivity="false">
-            <AppenderRef ref="AsyncLog"/>
-        </Logger>
+        <!--<Logger name="io.vertx" level="ERROR" additivity="false">-->
+            <!--<AppenderRef ref="AsyncLog"/>-->
+        <!--</Logger>-->
 
     </Loggers>
-
 </Configuration>
-

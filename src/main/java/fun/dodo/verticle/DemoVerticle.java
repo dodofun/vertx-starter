@@ -67,7 +67,7 @@ public class DemoVerticle extends AbstractVerticle {
         routers.routerList(router, builder, executor);
 
         // 启动服务
-        vertx.createHttpServer().requestHandler(router::accept).listen(options.getServerPort(), res -> {
+        vertx.createHttpServer().requestHandler(router::handle).listen(options.getServerPort(), res -> {
             if (res.succeeded()) {
                 startFuture.complete();
             } else {

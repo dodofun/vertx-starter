@@ -47,10 +47,10 @@ public class BaseService {
             path.append("/");
 
             // 设置header参数
-            Map<String, String> headers = new HashMap();
+            Map<String, String> headers = new HashMap<String, String>();
 
             // 设置query参数
-            Map<String, String> querys = new HashMap();
+            Map<String, String> querys = new HashMap<String, String>();
 
             final Observable<Response<String>> remoteCall = baseClient.get(path.toString(), headers, querys);
             // 同步调用, 等待返回结果

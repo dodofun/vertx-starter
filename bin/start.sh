@@ -10,7 +10,7 @@ rm -rf ../logs/*.*
 
 CLASSPATH=.
 CLASSPATH=$CLASSPATH:../etc
-for i in ../lib/*.jar
+for i in ../dist/*.jar
 do
 CLASSPATH=$CLASSPATH:$i
 done

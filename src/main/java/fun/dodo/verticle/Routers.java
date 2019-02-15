@@ -1,6 +1,6 @@
 package fun.dodo.verticle;
 
-import com.aliyun.openservices.log.common.LogItem;
+//import com.aliyun.openservices.log.common.LogItem;
 import fun.dodo.common.help.*;
 import fun.dodo.common.Options;
 import fun.dodo.common.meta.Log;
@@ -31,14 +31,18 @@ public final class Routers {
     private static final Logger LOGGER = LoggerFactory.getLogger(Routers.class);
 
     private final Options options;
-    private final AliyunLogService logService;
+//    private final AliyunLogService logService;
     private WorkerExecutor executor;
 
     @Inject
-    public Routers(final Options options, final AliyunLogService logService) {
+    public Routers(final Options options) {
         this.options = options;
-        this.logService = logService;
     }
+//
+//    public Routers(final Options options, final AliyunLogService logService) {
+//        this.options = options;
+//        this.logService = logService;
+//    }
 
     public void routerList(final Router router, final DemoVerticle.ComponentBuilder builder, final WorkerExecutor executor) {
         this.executor = executor;
@@ -106,12 +110,12 @@ public final class Routers {
                     .setCreatedAt(Instant.now().toEpochMilli());
 
             // TODO 推送日志到 日志系统
-            Vector<LogItem> logGroups = new Vector<>();
-
-            LogItem logItem = new LogItem();
-            logGroups.add(logItem);
-
-            logService.send("application-metrics", "metrics", null, null, logGroups);
+//            Vector<LogItem> logGroups = new Vector<>();
+//
+//            LogItem logItem = new LogItem();
+//            logGroups.add(logItem);
+//
+//            logService.send("application-metrics", "metrics", null, null, logGroups);
 
         }, false, null);
 

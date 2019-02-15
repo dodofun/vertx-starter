@@ -82,10 +82,10 @@ dependencies {
             "org.apache.logging.log4j:log4j-slf4j-impl:$log4jVersion",
             "commons-logging:commons-logging:$latestVersion",
             // 阿里云日志服务
-            "com.aliyun.openservices:aliyun-log:$latestVersion",
-            "com.aliyun.openservices:log-loghub-producer:$latestVersion",
+//            "com.aliyun.openservices:aliyun-log:$latestVersion",
+//            "com.aliyun.openservices:log-loghub-producer:$latestVersion",
             "com.aliyun.openservices:aliyun-log-log4j2-appender:$latestVersion",
-            "com.aliyun.openservices:loghub-client-lib:$latestVersion",
+//            "com.aliyun.openservices:loghub-client-lib:$latestVersion",
             
             // 分布式缓存 -  Redis 驱动 + Java 集合
 //            "org.redisson:redisson:$latestVersion",
@@ -189,6 +189,7 @@ shadowJar {
     classifier = 'fat'
     manifest {
         attributes "Main-Verticle": mainVerticleName
+        attributes "Multi-Release": true
     }
     mergeServiceFiles {
         include 'META-INF/services/io.vertx.core.spi.VerticleFactory'
