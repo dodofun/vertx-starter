@@ -82,8 +82,8 @@ dependencies {
             "org.apache.logging.log4j:log4j-slf4j-impl:$log4jVersion",
             "commons-logging:commons-logging:$latestVersion",
             // 阿里云日志服务
-//            "com.aliyun.openservices:aliyun-log:$latestVersion",
-//            "com.aliyun.openservices:log-loghub-producer:$latestVersion",
+            "com.aliyun.openservices:aliyun-log:$latestVersion",
+            "com.aliyun.openservices:aliyun-log-producer:$latestVersion",
             "com.aliyun.openservices:aliyun-log-log4j2-appender:$latestVersion",
 //            "com.aliyun.openservices:loghub-client-lib:$latestVersion",
             

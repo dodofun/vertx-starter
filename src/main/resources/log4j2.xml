@@ -4,6 +4,7 @@
     <Properties>
         <Property name="LOG_HOME">../log</Property>
         <property name="FILE_NAME">app</property>
+        <property name="APP_MODE">dev</property>
     </Properties>
 
     <!--先定义所有的appender-->
@@ -49,8 +50,8 @@
                 projectName="dodo-vr"
                 logstore="dodo-vr-application-log"
                 endpoint="dodo-vr.cn-beijing.log.aliyuncs.com"
-                accessKeyId="LTAI2vwu946b2kgi"
-                accessKey="XntP7OBBPl4gBaPAKE22in3wigOEFQ"
+                accessKeyId="LTAINYWU18MsqwwV"
+                accessKey="vAgmMbtN7lxvIe9cQT8GlOSfPW2117"
                 packageTimeoutInMS="3000"
                 logsCountPerPackage="4096"
                 logsBytesPerPackage="3145728"
@@ -59,8 +60,8 @@
                 maxIOThreadSizeInPool="8"
                 topic="DODO VR API"
                 source=""
-                timeFormat="yyyy-MM-dd'T'HH:mm:ssZ"
-                timeZone="UTC"
+                timeFormat="yyyy-MM-dd HH:mm:ss"
+                timeZone="Asia/Shanghai"
                 ignoreExceptions="true">
             <!--<PatternLayout pattern="%d{HH:mm:ss.SSS} %-5level %class{36} %L %M - %msg%xEx"/>-->
             <!--<Filters>-->

@@ -1,10 +1,9 @@
 package fun.dodo.verticle;
 
-//import com.aliyun.openservices.log.common.LogItem;
+import com.aliyun.openservices.aliyun.log.producer.Producer;
+import com.aliyun.openservices.log.common.LogItem;
 import fun.dodo.common.help.*;
 import fun.dodo.common.Options;
-import fun.dodo.common.meta.Log;
-import fun.dodo.common.meta.LogType;
 
 import fun.dodo.verticle.bots.BotDictionary;
 import io.vertx.core.http.HttpMethod;
@@ -20,8 +19,8 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.time.Instant;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
 import static fun.dodo.common.help.ReqHelper.printRequest;
 
@@ -31,18 +30,18 @@ public final class Routers {
     private static final Logger LOGGER = LoggerFactory.getLogger(Routers.class);
 
     private final Options options;
-//    private final AliyunLogService logService;
+    private final AliyunLogService logService;
+    private final Producer producer;
     private WorkerExecutor executor;
 
     @Inject
-    public Routers(final Options options) {
+    public Routers(final Options options, final AliyunLogService logService) {
         this.options = options;
+        this.logService = logService;
+        // 获取 producer
+        this.producer = AliyunLogUtils.createProducer(options.getLogProjectName(), options.getLogEndpoint(), options.getLogAccessKey(), options.getLogAccessSecret());
+
     }
-//
-//    public Routers(final Options options, final AliyunLogService logService) {
-//        this.options = options;
-//        this.logService = logService;
-//    }
 
     public void routerList(final Router router, final DemoVerticle.ComponentBuilder builder, final WorkerExecutor executor) {
         this.executor = executor;
@@ -72,7 +71,7 @@ public final class Routers {
 
 
         router.get("/id").handler(ctx -> {
-           ctx.response().end("TEST");
+            ctx.response().end("TEST");
         });
 
         final BotDictionary botDictionary = builder.botDictionary();
@@ -89,33 +88,37 @@ public final class Routers {
 
         executor.executeBlocking(future -> {
 
-            // 打印日志
-            printRequest(context);
+            if (!options.getRunMode().equals("dev")) {
+                // 打印日志
+                printRequest(context);
+            } else {
+                List<LogItem> logItemList = new ArrayList<>();
 
-            final Log.Builder builder = Log.newBuilder();
+                LogItem logItem = new LogItem();
+                logItem.PushBack("scheme", request.scheme());
+                logItem.PushBack("method", request.method().name());
+                logItem.PushBack("Access", context.normalisedPath());
+                logItem.PushBack("Complete:", context.request().absoluteURI());
+                logItem.PushBack("Client", request.remoteAddress().host());
+                logItem.PushBack("Server", request.localAddress().host());
+                logItem.PushBack("Headers", StringUtil.expressMultiMap(request.headers()));
+                logItem.PushBack("Params", StringUtil.expressMultiMap(request.params()));
+                logItem.PushBack("__topic__", "API_LOG");
+                logItem.PushBack("level", "API");
 
-            builder.setId(IdCreator.newId())
-                    .setOwnerId(options.getId())
-                    .setType(LogType.LOG_TYPE_DEFAULT)
-                    .setContentType(String.valueOf(context.getAcceptableContentType()))
-                    .setScheme(String.valueOf(request.scheme()))
-                    .setMethod(String.valueOf(request.method().name()))
-                    .setPath(String.valueOf(context.currentRoute().getPath()))
-                    .setCompletePath(String.valueOf(request.absoluteURI()))
-                    .setClient(String.valueOf(request.remoteAddress().path()))
-                    .setServer(String.valueOf(request.localAddress().path()))
-                    .setHeaders(String.valueOf(StringUtil.expressMultiMap(request.headers())))
-                    .setAttributes(String.valueOf(StringUtil.expressMultiMap(request.formAttributes())))
-                    .setBody(String.valueOf(context.getBodyAsString()))
-                    .setCreatedAt(Instant.now().toEpochMilli());
+                if (!StringUtil.isNullOrEmpty(context.currentRoute().getPath())) {
+                    logItem.PushBack("path", context.currentRoute().getPath());
+                }
 
-            // TODO 推送日志到 日志系统
-//            Vector<LogItem> logGroups = new Vector<>();
-//
-//            LogItem logItem = new LogItem();
-//            logGroups.add(logItem);
-//
-//            logService.send("application-metrics", "metrics", null, null, logGroups);
+                String bodyString = context.getBodyAsString();
+                if (!StringUtil.isNullOrEmpty(bodyString)) {
+                    logItem.PushBack("Body", bodyString);
+                }
+
+                logItemList.add(logItem);
+                logService.send(producer, options.getLogProjectName(), options.getLogstore(), logItemList);
+
+            }
 
         }, false, null);
 

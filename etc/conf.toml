@@ -56,10 +56,11 @@ title = "Configuration"
     api_log_queue = "api-log"
 
 [aliyunLog]
-    project_name = "dodo-demo"
-    endpoint = "http://{project_name}.cn-beijing.log.aliyuncs.com"
-    access_key = "LTAICWWsWX6u2qJ9"
-    access_secret = "1YsL1rKknuAwoRDSskG1VwBELgFuLc"
+    access_key = "LTAINYWU18MsqwwV"
+    access_secret = "vAgmMbtN7lxvIe9cQT8GlOSfPW2117"
+    project_name = "dodo-vr"
+    endpoint = "{project_name}.cn-beijing.log.aliyuncs.com"
+    logstore = "dodo-vr-application-log"
 
 [cors]
     host = "*"
