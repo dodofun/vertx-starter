@@ -90,11 +90,11 @@ public final class Routers {
         executor.executeBlocking(future -> {
 
             if (options.getRunMode().equals("dev")) {
-                // 打印日志
+                // 打印日志，并通过log4j写入日志系统
                 printRequest(context);
             } else {
+                // 通过SDK写入日志系统
                 List<LogItem> logItemList = new ArrayList<>();
-
                 LogItem logItem = new LogItem();
                 logItem.PushBack("scheme", request.scheme());
                 logItem.PushBack("method", request.method().name());
@@ -106,16 +106,13 @@ public final class Routers {
                 logItem.PushBack("Params", StringUtil.expressMultiMap(request.params()));
                 logItem.PushBack("__topic__", "API_LOG");
                 logItem.PushBack("level", "API");
-
                 if (!StringUtil.isNullOrEmpty(context.currentRoute().getPath())) {
                     logItem.PushBack("path", context.currentRoute().getPath());
                 }
-
                 String bodyString = context.getBodyAsString();
                 if (!StringUtil.isNullOrEmpty(bodyString)) {
                     logItem.PushBack("Body", bodyString);
                 }
-
                 logItemList.add(logItem);
                 logService.send(producer, options.getLogProjectName(), options.getLogstore(), logItemList);
 
