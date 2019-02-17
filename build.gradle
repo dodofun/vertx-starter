@@ -84,9 +84,9 @@ dependencies {
             // 阿里云日志服务
             "com.aliyun.openservices:aliyun-log:$latestVersion",
             "com.aliyun.openservices:aliyun-log-producer:$latestVersion",
-            "com.aliyun.openservices:aliyun-log-log4j2-appender:$latestVersion",
-//            "com.aliyun.openservices:loghub-client-lib:$latestVersion",
-            
+            "com.aliyun.openservices:loghub-client-lib:$latestVersion",
+            "joda-time:joda-time:$latestVersion",
+
             // 分布式缓存 -  Redis 驱动 + Java 集合
 //            "org.redisson:redisson:$latestVersion",
             "org.msgpack:msgpack-core:$latestVersion",
@@ -145,27 +145,27 @@ dependencies {
 }
 
 // See: http://docs.oracle.com/javase/8/docs/technotes/tools/windows/javac.html#BHCJCABJ
-compileJava.options*.compilerArgs = [
-        '-Xlint:cast',
-        '-Xlint:classfile',
-        '-Xlint:deprecation',
-        '-Xlint:divzero',
-        '-Xlint:dep-ann',
-        '-Xlint:empty',
-        '-Xlint:fallthrough',
-        '-Xlint:finally',
-        '-Xlint:overrides',
-        '-Xlint:path',
-        '-Xlint:processing',
-        '-Xlint:rawtypes',
-        '-Xlint:serial',
-        '-Xlint:static',
-        '-Xlint:try',
-        '-Xlint:unchecked',
-        '-Xlint:varargs',
-        '-Xlint:-options',
-        '-Xlint:-overrides'
-]
+//compileJava.options*.compilerArgs = [
+//        '-Xlint:cast',
+//        '-Xlint:classfile',
+//        '-Xlint:deprecation',
+//        '-Xlint:divzero',
+//        '-Xlint:dep-ann',
+//        '-Xlint:empty',
+//        '-Xlint:fallthrough',
+//        '-Xlint:finally',
+//        '-Xlint:overrides',
+//        '-Xlint:path',
+//        '-Xlint:processing',
+//        '-Xlint:rawtypes',
+//        '-Xlint:serial',
+//        '-Xlint:static',
+//        '-Xlint:try',
+//        '-Xlint:unchecked',
+//        '-Xlint:varargs',
+//        '-Xlint:-options',
+//        '-Xlint:-overrides'
+//]
 
 protobuf {
     protoc {

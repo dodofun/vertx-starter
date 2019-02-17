@@ -23,7 +23,6 @@ public class MainVerticle extends AbstractVerticle {
 
         vertx = Vertx.vertx(vertxOptions);
 
-
         DeploymentOptions options = new DeploymentOptions()
                 .setWorker(true).setWorkerPoolName("demo").setWorkerPoolSize(1024).setMaxWorkerExecuteTime(60000).setInstances(1);
 

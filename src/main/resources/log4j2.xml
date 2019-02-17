@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<Configuration status="WARN">
+<Configuration status="WARN" packages="fun.dodo.common.log">
     <Properties>
         <Property name="LOG_HOME">../log</Property>
         <property name="FILE_NAME">app</property>
-        <property name="APP_MODE">dev</property>
     </Properties>
 
     <!--先定义所有的appender-->
