@@ -5,6 +5,7 @@ import fun.dodo.common.Options;
 import fun.dodo.verticle.acts.DataStream;
 import fun.dodo.verticle.bots.BotConsumer;
 import fun.dodo.verticle.bots.BotDictionary;
+import fun.dodo.verticle.bots.BotLog;
 import io.vertx.core.Future;
 import io.vertx.reactivex.core.AbstractVerticle;
 import io.vertx.reactivex.core.WorkerExecutor;
@@ -35,6 +36,8 @@ public class DemoVerticle extends AbstractVerticle {
         BotConsumer botConsumer();
 
         BotDictionary botDictionary();
+
+        BotLog botLog();
     }
 
     @Override
