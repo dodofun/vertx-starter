@@ -1,6 +1,6 @@
 #!/bin/bash
-name='member'
-upper='Member'
+name='user'
+upper='User'
 
 rm -rf $name
 cp -r dictionary $name

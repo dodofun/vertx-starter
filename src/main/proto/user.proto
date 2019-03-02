@@ -1,0 +1,49 @@
+syntax = "proto3";
+
+package fun.dodo.common.meta;
+
+option java_multiple_files = true;
+option java_generate_equals_and_hash = true;
+
+option java_package = "fun.dodo.common.meta";
+option java_outer_classname = "UserProto";
+
+option csharp_namespace = "Dodo.common.Meta.KnownTypes";
+
+option objc_class_prefix = "WKM";
+
+// 定义
+message User {
+    // ID
+    uint64 id = 1;
+    // 用户来源产品
+    uint64 ownerId = 2;
+    // 类型
+    uint32 type = 3;
+    // 名称
+    string name = 4;
+    // 头像
+    string avatar = 5;
+    // 手机号
+    string mobile = 6;
+    // 用户名
+    string username = 7;
+    // 密码
+    string password = 8;
+
+    // 备注
+    string notes  =20;
+    // 是否有效
+    bool enabled = 21;
+    // 创建时间: 用长整数表达
+    uint64 createdAt = 22;
+    // 更新时间: 用长整数表达
+    uint64 updatedAt = 23;
+}
+
+message UserList {
+    repeated User user = 1;
+    uint64 count = 2;
+    uint64 index = 3;
+    uint64 size = 4;
+}

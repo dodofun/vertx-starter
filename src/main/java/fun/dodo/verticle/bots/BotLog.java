@@ -9,38 +9,24 @@ import fun.dodo.common.Constants;
 import fun.dodo.common.Options;
 import fun.dodo.common.echo.EchoOne;
 import fun.dodo.common.help.RedisUtils;
-import fun.dodo.common.help.ReqHelper;
-import fun.dodo.common.help.StringUtil;
-import fun.dodo.common.interfaces.BotBase;
 import fun.dodo.common.log.AliyunLogService;
 import fun.dodo.common.log.AliyunLogUtils;
-import fun.dodo.common.meta.Dictionary;
-import fun.dodo.common.meta.EchoList;
-import fun.dodo.verticle.data.dictionary.Data;
 import io.vertx.core.json.JsonObject;
-import io.vertx.ext.web.api.validation.ParameterType;
 import io.vertx.reactivex.core.WorkerExecutor;
-import io.vertx.reactivex.core.buffer.Buffer;
 import io.vertx.reactivex.core.http.HttpServerRequest;
 import io.vertx.reactivex.core.http.HttpServerResponse;
 import io.vertx.reactivex.ext.web.Router;
 import io.vertx.reactivex.ext.web.RoutingContext;
-import io.vertx.reactivex.ext.web.api.validation.HTTPRequestValidationHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.lang.reflect.Method;
-import java.time.Instant;
 import java.util.*;
 
-import static fun.dodo.common.Constants.*;
 import static fun.dodo.common.help.ReqHelper.*;
 import static fun.dodo.common.help.ResHelper.*;
-import static io.vertx.reactivex.ext.web.api.validation.ParameterTypeValidator.createLongTypeValidator;
 import static org.apache.http.HttpStatus.SC_OK;
-
 
 @Singleton
 public final class BotLog {

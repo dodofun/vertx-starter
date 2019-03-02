@@ -22,7 +22,7 @@ public interface Dao {
      * 更新
      */
     @SqlUpdate("UPDATE dictionary SET "
-            + "entity = :bytes, enabled = :e.enabled, updatedAt = :e.updatedAt, name = :e.name, notes = :e.notes, ownerId = :e.ownerId "
+            + "entity = :bytes, enabled = :e.enabled, updatedAt = :e.updatedAt, name = :e.name, notes = :e.notes, ownerId = :e.ownerId, type = :e.type "
             + "WHERE id = :e.id")
     void update(@BindBean("e") Dictionary entity,  @Bind("bytes") byte[] bytes);
 

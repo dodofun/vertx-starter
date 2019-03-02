@@ -1,6 +1,5 @@
 package fun.dodo.verticle.bots;
 
-import com.google.protobuf.Descriptors;
 import fun.dodo.common.help.ReqHelper;
 import fun.dodo.common.interfaces.BotBase;
 import fun.dodo.common.meta.Dictionary;
@@ -18,7 +17,6 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.time.Instant;
 
