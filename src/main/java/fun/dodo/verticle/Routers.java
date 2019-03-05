@@ -68,7 +68,7 @@ public final class Routers {
                 // 前置操作
                 .handler(ctx -> {
                     // 打印并记录日志
-//                    insertLog(ctx);
+                    insertLog(ctx);
                     // TODO 前置操作完成后，进入业务路由模块
                     ctx.next();
                 });
