@@ -9,6 +9,7 @@ import fun.dodo.common.log.AliyunLogService;
 import fun.dodo.common.log.AliyunLogUtils;
 import fun.dodo.verticle.bots.BotDictionary;
 import fun.dodo.verticle.bots.BotLog;
+import fun.dodo.verticle.bots.BotUser;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.reactivex.core.WorkerExecutor;
 import io.vertx.reactivex.core.http.HttpServerRequest;
@@ -63,11 +64,11 @@ public final class Routers {
                 // Body
                 .handler(BodyHandler.create())
                 // 超时时间
-                .handler(TimeoutHandler.create(10000))
+                .handler(TimeoutHandler.create(30000))
                 // 前置操作
                 .handler(ctx -> {
                     // 打印并记录日志
-                    insertLog(ctx);
+//                    insertLog(ctx);
                     // TODO 前置操作完成后，进入业务路由模块
                     ctx.next();
                 });
@@ -81,6 +82,9 @@ public final class Routers {
 
         final BotLog botLog = builder.botLog();
         botLog.register(router, executor);
+
+        final BotUser botUser = builder.botUser();
+        botUser.register(router, executor);
 
     }
 

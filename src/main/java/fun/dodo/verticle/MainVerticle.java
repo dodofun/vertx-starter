@@ -16,12 +16,15 @@ public class MainVerticle extends AbstractVerticle {
     public void start(Future<Void> startFuture) {
 
         VertxOptions vertxOptions = new VertxOptions();
-        vertxOptions.setBlockedThreadCheckInterval(1000)
+        vertxOptions.setBlockedThreadCheckInterval(100000)
                 .setMaxEventLoopExecuteTime(2000)
                 .setMaxWorkerExecuteTime(60l * 1000 * 1000000)
-                .setHAEnabled(true);
+                .setHAEnabled(true).setWarningExceptionTime(100000);
 
         vertx = Vertx.vertx(vertxOptions);
+        vertx.exceptionHandler(e -> {
+           e.printStackTrace();
+        });
 
         DeploymentOptions options = new DeploymentOptions()
                 .setWorker(true).setWorkerPoolName("demo").setWorkerPoolSize(1024).setMaxWorkerExecuteTime(60000).setInstances(1);

@@ -150,18 +150,18 @@ public final class BotLog {
         }
 
         // 读取分页 Index
-        int index = (int)getBodySafeLongValue(context, "index");
+        int index = (int) getBodySafeLongValue(context, "index");
         if (0 > index) {
             index = 0;
         }
 
-        int size = (int)getBodySafeLongValue(context, "size");
+        int size = (int) getBodySafeLongValue(context, "size");
         if (0 >= size) {
             size = 20;
         }
 
         // 缓存时间
-        int expires = (int)getBodySafeLongValue(context, "expires");
+        int expires = (int) getBodySafeLongValue(context, "expires");
         if (0 >= expires) {
             expires = 1200;
         }
@@ -180,10 +180,10 @@ public final class BotLog {
             Optional<Object> resultRedis = redisUtils.get(key);
             if (resultRedis.isPresent()) {
                 // redis中有缓存数据
-                result = (GetLogsResponse)resultRedis.get();
+                result = (GetLogsResponse) resultRedis.get();
             } else {
                 // 远程获取小程序日志列表
-                result = logService.getLogs(client, project, logstore, (int)from, (int)to, topic, query, index, size, reverse);
+                result = logService.getLogs(client, project, logstore, (int) from, (int) to, topic, query, index, size, reverse);
 
                 // 将结果缓存
                 redisUtils.set(key, result, expires);
@@ -192,7 +192,7 @@ public final class BotLog {
             final HttpServerResponse response = context.response();
 
             final EchoOne echo = new EchoOne();
-            echo.getHead().setMessage("提取日志数据").setItemCount((int)result.getProcessedRow());
+            echo.getHead().setMessage("提取日志数据").setItemCount((int) result.getProcessedRow());
             echo.getBody().setData(result);
 
             response.putHeader(Constants.CONTENT_TYPE, Constants.CONTENT_TYPE_JSON)

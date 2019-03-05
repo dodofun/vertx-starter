@@ -132,6 +132,7 @@ public final class BotDictionary implements BotBase {
     /**
      * 更新 - PUT /owner/:ownerId/dictionary/:id?prop=type
      * prop 不为空时，只更新指定属性值
+     *
      * @param context: HTTP 路由上下文
      */
     @Override
@@ -231,13 +232,13 @@ public final class BotDictionary implements BotBase {
     @Override
     public void get(final RoutingContext context) {
 
-            final long ownerId = Long.valueOf(context.pathParam(OWNER_ID));
-            final long dictionaryId = Long.valueOf(context.pathParam(ID));
+        final long ownerId = Long.valueOf(context.pathParam(OWNER_ID));
+        final long dictionaryId = Long.valueOf(context.pathParam(ID));
 
-            // 提取伙伴数据
-            final Dictionary dictionary = data.get(ownerId, dictionaryId);
+        // 提取伙伴数据
+        final Dictionary dictionary = data.get(ownerId, dictionaryId);
 
-            echoItem(context, dictionary);
+        echoItem(context, dictionary);
 
     }
 
@@ -247,27 +248,27 @@ public final class BotDictionary implements BotBase {
     @Override
     public void getList(final RoutingContext context) {
 
-            final HttpServerRequest request = context.request();
+        final HttpServerRequest request = context.request();
 
-            // 读取拥有者的 ID
-            final long ownerId = getParamSafeLongValue(request, OWNER_ID);
+        // 读取拥有者的 ID
+        final long ownerId = getParamSafeLongValue(request, OWNER_ID);
 
-            // 读取分页 Index
-            int pageIndex = getParamSafeIntegerValue(request, PAGE_INDEX);
-            if (0 > pageIndex) {
-                pageIndex = 0;
-            }
+        // 读取分页 Index
+        int pageIndex = getParamSafeIntegerValue(request, PAGE_INDEX);
+        if (0 > pageIndex) {
+            pageIndex = 0;
+        }
 
-            // 读取分页 Size
-            int pageSize = getParamSafeIntegerValue(request, PAGE_SIZE);
-            if (0 >= pageSize) {
-                pageSize = 20;
-            }
+        // 读取分页 Size
+        int pageSize = getParamSafeIntegerValue(request, PAGE_SIZE);
+        if (0 >= pageSize) {
+            pageSize = 20;
+        }
 
-            // 提取清单
-            final EchoList echoList = data.getList(ownerId, pageIndex, pageSize);
+        // 提取清单
+        final EchoList echoList = data.getList(ownerId, pageIndex, pageSize);
 
-            echoList(context, echoList.getObjectList(), echoList.getIndex(), echoList.getSize(), echoList.getCount());
+        echoList(context, echoList.getObjectList(), echoList.getIndex(), echoList.getSize(), echoList.getCount());
 
     }
 
