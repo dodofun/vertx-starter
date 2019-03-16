@@ -2,6 +2,8 @@ package fun.dodo.verticle;
 
 import com.aliyun.openservices.aliyun.log.producer.Producer;
 import com.aliyun.openservices.log.common.LogItem;
+import com.google.gson.Gson;
+import fun.dodo.common.echo.EchoOne;
 import fun.dodo.common.help.*;
 import fun.dodo.common.Options;
 
@@ -37,11 +39,13 @@ public final class Routers {
     private final AliyunLogService logService;
     private final Producer producer;
     private WorkerExecutor executor;
+    private final Gson gson;
 
     @Inject
-    public Routers(final Options options, final AliyunLogService logService) {
+    public Routers(final Options options, final AliyunLogService logService, final Gson gson) {
         this.options = options;
         this.logService = logService;
+        this.gson = gson;
         // 获取 producer
         this.producer = AliyunLogUtils.createProducer(options.getLogProjectName(), options.getLogEndpoint(), options.getLogAccessKey(), options.getLogAccessSecret());
 
@@ -86,6 +90,14 @@ public final class Routers {
         final BotUser botUser = builder.botUser();
         botUser.register(router, executor);
 
+        router.route().failureHandler(ctx -> {
+           LOGGER.error("错误!");
+            EchoOne echo = new EchoOne();
+            echo.getHead().setCode(-2).setItemCount(0).setMessage("调用出错");
+            echo.getBody().setData("");
+            ctx.response().putHeader("Content-Type", "application/json;chatset=utf-8").putHeader("Access-Control-Allow-Origin", "*").setStatusCode(400).end(gson.toJson(echo));
+
+        });
     }
 
     /***
