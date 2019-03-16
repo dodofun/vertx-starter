@@ -34,18 +34,20 @@ public final class Keeper {
      *
      * @param entity : 模型定义
      */
-    public void add(final User entity) {
+    public boolean add(final User entity) {
         try (Handle handle = dbi.open()) {
             checkArgument(null != entity, "不能为空");
 
             final Dao dao = handle.attach(Dao.class);
 
-            dao.add(entity, entity.toByteArray());
+            int result = dao.add(entity, entity.toByteArray());
 
+            return result > 0;
         } catch (final Exception e) {
             LOGGER.error(DATABASE_ACCESS_ERROR + ", {};  {}", e.getMessage(), Arrays.toString(e.getStackTrace()));
             e.printStackTrace();
         }
+        return false;
     }
 
     /**
@@ -53,17 +55,19 @@ public final class Keeper {
      *
      * @param entity : 模型定义
      */
-    public void update(final User entity) {
+    public boolean update(final User entity) {
         try (Handle handle = dbi.open()) {
             checkArgument(null != entity, "不能为空");
 
             final Dao dao = handle.attach(Dao.class);
 
-            dao.update(entity, entity.toByteArray());
+            int result = dao.update(entity, entity.toByteArray());
 
+            return result > 0;
         } catch (final Exception e) {
             LOGGER.error(DATABASE_ACCESS_ERROR + ", {};  {}", e.getMessage(), Arrays.toString(e.getStackTrace()));
         }
+        return false;
     }
 
     /***
@@ -122,16 +126,19 @@ public final class Keeper {
      *
      * @param entityId
      */
-    public void delete(final long entityId) {
+    public boolean delete(final long entityId) {
         try (Handle handle = dbi.open()) {
             checkArgument(0 < entityId, "ID 应该是大于零的整数");
 
             final Dao dao = handle.attach(Dao.class);
 
-            dao.delete(entityId);
+            int result = dao.delete(entityId);
+
+            return result > 0;
         } catch (final Exception e) {
             LOGGER.error(DATABASE_ACCESS_ERROR + ", {};  {}", e.getMessage(), Arrays.toString(e.getStackTrace()));
         }
+        return false;
     }
 
 }

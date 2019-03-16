@@ -33,15 +33,12 @@ public final class Data {
      *
      * @param entity: Entity
      */
-    public void add(final User entity) {
-
-        CompletableFuture
-                .runAsync(() -> keeper.add(entity))
-                .thenRunAsync(() -> redis.add(entity.getOwnerId(), entity))
-                .whenCompleteAsync((a, e) -> {
-
-                });
-
+    public boolean add(final User entity) {
+        return CompletableFuture
+                .supplyAsync(() -> keeper.add(entity))
+                .thenAcceptAsync(r -> {
+                    if (r) redis.add(entity.getOwnerId(), entity);
+                }).isDone();
     }
 
     /**
@@ -50,13 +47,13 @@ public final class Data {
      * @param entity: Entity
      */
 
-    public void update(final User entity) {
+    public boolean update(final User entity) {
 
-        CompletableFuture
-                .runAsync(() -> keeper.update(entity))
-                .thenRunAsync(() -> redis.add(entity.getOwnerId(), entity))
-                .whenComplete((a, e) -> {
-                });
+        return CompletableFuture
+                .supplyAsync(() -> keeper.update(entity))
+                .thenAcceptAsync(r -> {
+                    if (r) redis.add(entity.getOwnerId(), entity);
+                }).isDone();
     }
 
     /**
@@ -98,7 +95,7 @@ public final class Data {
                     list.add(entity);
                 }
             });
-            builder.addAllObject((List) list);
+            builder.addAllObject((ArrayList) list);
 
         } else {
             LOGGER.info("Redis 缺乏数据 (User List), 尝试从 MySQL 内获取 ***");
@@ -113,9 +110,9 @@ public final class Data {
                 if (start < list.size()) {
                     builder.setCount(list.size());
                     if (end < list.size())
-                        builder.addAllObject((List) list.subList(start, end)).build();
+                        builder.addAllObject((ArrayList) list.subList(start, end)).build();
                     else
-                        builder.addAllObject((List) list.subList(start, list.size())).build();
+                        builder.addAllObject((ArrayList) list.subList(start, list.size())).build();
                 }
             }
         }
@@ -127,14 +124,13 @@ public final class Data {
      *
      * @param entityId: 伙伴的 ID
      */
-    public void delete(final long ownerId, final long entityId) {
+    public boolean delete(final long ownerId, final long entityId) {
 
-        CompletableFuture
-                .runAsync(() -> keeper.delete(entityId))
-                .thenRunAsync(() -> redis.delete(ownerId, entityId))
-                .whenComplete((a, e) -> {
-                });
-
+        return CompletableFuture
+                .supplyAsync(() -> keeper.delete(entityId))
+                .thenAcceptAsync(r -> {
+                    if (r) redis.delete(ownerId, entityId);
+                }).isDone();
     }
 
 }
