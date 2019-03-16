@@ -117,9 +117,10 @@ public final class BotDictionary implements BotBase {
                         .setId(id).setOwnerId(ownerId);
 
                 // 持久化存储
-                data.add(builder.build());
-                echoDoneMessage(context, SC_OK, "success");
-                return;
+                if (data.add(builder.build())) {
+                    echoDoneMessage(context, SC_OK, "success");
+                    return;
+                }
             }
 
         } catch (Exception e) {
@@ -188,9 +189,10 @@ public final class BotDictionary implements BotBase {
                 }
 
                 // 持久化存储
-                data.update(builder.build());
-                echoDoneMessage(context, SC_OK, "success");
-                return;
+                if (data.update(builder.build())) {
+                    echoDoneMessage(context, SC_OK, "success");
+                    return;
+                }
             }
 
         } catch (Exception e) {
@@ -205,24 +207,30 @@ public final class BotDictionary implements BotBase {
     @Override
     public void delete(final RoutingContext context) {
 
-        final HttpServerRequest request = context.request();
+        try {
+            final HttpServerRequest request = context.request();
 
-        // 读取作者的 ID
-        final long ownerId = getParamSafeLongValue(request, OWNER_HOLDER);
-        if (ReqHelper.wrongLongId(context, ownerId, MESSAGE_OWNERID_CONDITION)) {
-            return;
+            // 读取作者的 ID
+            final long ownerId = getParamSafeLongValue(request, OWNER_HOLDER);
+            if (ReqHelper.wrongLongId(context, ownerId, MESSAGE_OWNERID_CONDITION)) {
+                return;
+            }
+
+            // 读取 ID
+            final long dictionaryId = getParamSafeLongValue(request, ID_HOLDER);
+            if (ReqHelper.wrongLongId(context, dictionaryId, MESSAGE_ID_CONDITION)) {
+                return;
+            }
+
+            // 更新持久化存储
+            if (data.delete(ownerId, dictionaryId)) {
+                echoDoneMessage(context, SC_OK, "success");
+                return;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
-        // 读取 ID
-        final long dictionaryId = getParamSafeLongValue(request, ID_HOLDER);
-        if (ReqHelper.wrongLongId(context, dictionaryId, MESSAGE_ID_CONDITION)) {
-            return;
-        }
-
-        // 更新持久化存储
-        data.delete(ownerId, dictionaryId);
-
-        echoDoneMessage(context, SC_OK, "success");
+        echoFoundError(context, "fail");
 
     }
 
@@ -232,13 +240,20 @@ public final class BotDictionary implements BotBase {
     @Override
     public void get(final RoutingContext context) {
 
-        final long ownerId = Long.valueOf(context.pathParam(OWNER_ID));
-        final long dictionaryId = Long.valueOf(context.pathParam(ID));
+        try {
+            final long ownerId = Long.valueOf(context.pathParam(OWNER_ID));
+            final long dictionaryId = Long.valueOf(context.pathParam(ID));
 
-        // 提取伙伴数据
-        final Dictionary dictionary = data.get(ownerId, dictionaryId);
+            // 提取伙伴数据
+            final Dictionary dictionary = data.get(ownerId, dictionaryId);
 
-        echoItem(context, dictionary);
+            echoItem(context, dictionary);
+            return;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        echoFoundError(context, "fail");
 
     }
 
@@ -248,27 +263,37 @@ public final class BotDictionary implements BotBase {
     @Override
     public void getList(final RoutingContext context) {
 
-        final HttpServerRequest request = context.request();
+        try {
 
-        // 读取拥有者的 ID
-        final long ownerId = getParamSafeLongValue(request, OWNER_ID);
+            final HttpServerRequest request = context.request();
 
-        // 读取分页 Index
-        int pageIndex = getParamSafeIntegerValue(request, PAGE_INDEX);
-        if (0 > pageIndex) {
-            pageIndex = 0;
+            // 读取拥有者的 ID
+            final long ownerId = getParamSafeLongValue(request, OWNER_ID);
+
+            // 读取分页 Index
+            int pageIndex = getParamSafeIntegerValue(request, PAGE_INDEX);
+            if (0 > pageIndex) {
+                pageIndex = 0;
+            }
+
+            // 读取分页 Size
+            int pageSize = getParamSafeIntegerValue(request, PAGE_SIZE);
+            if (0 >= pageSize) {
+                pageSize = 20;
+            }
+
+            // 提取清单
+            final EchoList echoList = data.getList(ownerId, pageIndex, pageSize);
+
+            echoList(context, echoList.getObjectList(), echoList.getIndex(), echoList.getSize(), echoList.getCount());
+
+            return;
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
-        // 读取分页 Size
-        int pageSize = getParamSafeIntegerValue(request, PAGE_SIZE);
-        if (0 >= pageSize) {
-            pageSize = 20;
-        }
-
-        // 提取清单
-        final EchoList echoList = data.getList(ownerId, pageIndex, pageSize);
-
-        echoList(context, echoList.getObjectList(), echoList.getIndex(), echoList.getSize(), echoList.getCount());
+        echoFoundError(context, "fail");
 
     }
 

@@ -33,15 +33,12 @@ public final class Data {
      *
      * @param entity: Entity
      */
-    public void add(final Dictionary entity) {
-
-        CompletableFuture
-                .runAsync(() -> keeper.add(entity))
-                .thenRunAsync(() -> redis.add(entity.getOwnerId(), entity))
-                .whenCompleteAsync((a, e) -> {
-
-                });
-
+    public boolean add(final Dictionary entity) {
+        return CompletableFuture
+                .supplyAsync(() -> keeper.add(entity))
+                .thenAcceptAsync(r -> {
+                    if (r) redis.add(entity.getOwnerId(), entity);
+                }).isDone();
     }
 
     /**
@@ -50,13 +47,13 @@ public final class Data {
      * @param entity: Entity
      */
 
-    public void update(final Dictionary entity) {
+    public boolean update(final Dictionary entity) {
 
-        CompletableFuture
-                .runAsync(() -> keeper.update(entity))
-                .thenRunAsync(() -> redis.add(entity.getOwnerId(), entity))
-                .whenComplete((a, e) -> {
-                });
+        return CompletableFuture
+                .supplyAsync(() -> keeper.update(entity))
+                .thenAcceptAsync(r -> {
+                    if (r) redis.add(entity.getOwnerId(), entity);
+                }).isDone();
     }
 
     /**
@@ -127,14 +124,13 @@ public final class Data {
      *
      * @param entityId: 伙伴的 ID
      */
-    public void delete(final long ownerId, final long entityId) {
+    public boolean delete(final long ownerId, final long entityId) {
 
-        CompletableFuture
-                .runAsync(() -> keeper.delete(entityId))
-                .thenRunAsync(() -> redis.delete(ownerId, entityId))
-                .whenComplete((a, e) -> {
-                });
-
+        return CompletableFuture
+                .supplyAsync(() -> keeper.delete(entityId))
+                .thenAcceptAsync(r -> {
+                    if (r) redis.delete(ownerId, entityId);
+                }).isDone();
     }
 
 }

@@ -16,7 +16,7 @@ public interface Dao {
     @SqlUpdate("INSERT INTO dictionary "
             + "(id, ownerId, type, name, notes, entity, enabled, createdAt, updatedAt) values "
             + "(:e.id, :e.ownerId, :e.type, :e.name, :e.notes, :bytes, :e.enabled, :e.createdAt, :e.updatedAt)")
-    void add(@BindBean("e") Dictionary entity,  @Bind("bytes") byte[] bytes);
+    int add(@BindBean("e") Dictionary entity,  @Bind("bytes") byte[] bytes);
 
     /**
      * 更新
@@ -24,7 +24,7 @@ public interface Dao {
     @SqlUpdate("UPDATE dictionary SET "
             + "entity = :bytes, enabled = :e.enabled, updatedAt = :e.updatedAt, name = :e.name, notes = :e.notes, ownerId = :e.ownerId, type = :e.type "
             + "WHERE id = :e.id")
-    void update(@BindBean("e") Dictionary entity,  @Bind("bytes") byte[] bytes);
+    int update(@BindBean("e") Dictionary entity,  @Bind("bytes") byte[] bytes);
 
     /**
      * 读取 - by ID
@@ -42,6 +42,6 @@ public interface Dao {
      * 删除 - by ID
      */
     @SqlUpdate("DELETE FROM dictionary WHERE id = :id")
-    void delete(@Bind("id") long id);
+    int delete(@Bind("id") long id);
 
 }
