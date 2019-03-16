@@ -1,6 +1,5 @@
 package fun.dodo.verticle.data.dictionary;
 
-import com.google.protobuf.Message;
 import fun.dodo.common.meta.Dictionary;
 import org.skife.jdbi.v2.sqlobject.*;
 import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapper;

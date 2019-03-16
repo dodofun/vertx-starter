@@ -1,6 +1,5 @@
 package fun.dodo.verticle.data.user;
 
-import com.google.protobuf.Message;
 import fun.dodo.common.meta.User;
 import org.skife.jdbi.v2.sqlobject.*;
 import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapper;
