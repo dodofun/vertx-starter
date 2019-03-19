@@ -4,6 +4,7 @@ buildscript {
         jcenter()
         mavenCentral()
         mavenLocal()
+        maven { url "https://mvnrepository.com" }
         maven { url 'http://maven.aliyun.com/mvn/repository/' }
         maven { url "http://clojars.org/repo" }
         maven { url "http://repo.spring.io/libs-release" }
@@ -39,11 +40,15 @@ repositories {
     jcenter()
     mavenCentral()
     mavenLocal()
+    maven { url "https://mvnrepository.com" }
     maven { url 'http://maven.aliyun.com/mvn/repository/' }
     maven { url "http://clojars.org/repo" }
     maven { url "http://repo.spring.io/libs-release" }
     maven { url "https://plugins.gradle.org/m2/" }
     maven { url "https://oss.sonatype.org/content/repositories/releases/" }
+}
+
+configurations {
 }
 
 dependencies {
@@ -54,6 +59,7 @@ dependencies {
             "io.vertx:vertx-rx-java2:$vertxVersion",
             "io.reactivex.rxjava2:rxjava:$latestVersion",
             "io.vertx:vertx-web-api-contract:$latestVersion",
+            "io.vertx:vertx-sync:$vertxVersion",
 
             // Google
             "com.google.code.gson:gson:$latestVersion",
@@ -144,29 +150,6 @@ dependencies {
     testCompile "io.vertx:vertx-unit:$latestVersion"
 }
 
-// See: http://docs.oracle.com/javase/8/docs/technotes/tools/windows/javac.html#BHCJCABJ
-//compileJava.options*.compilerArgs = [
-//        '-Xlint:cast',
-//        '-Xlint:classfile',
-//        '-Xlint:deprecation',
-//        '-Xlint:divzero',
-//        '-Xlint:dep-ann',
-//        '-Xlint:empty',
-//        '-Xlint:fallthrough',
-//        '-Xlint:finally',
-//        '-Xlint:overrides',
-//        '-Xlint:path',
-//        '-Xlint:processing',
-//        '-Xlint:rawtypes',
-//        '-Xlint:serial',
-//        '-Xlint:static',
-//        '-Xlint:try',
-//        '-Xlint:unchecked',
-//        '-Xlint:varargs',
-//        '-Xlint:-options',
-//        '-Xlint:-overrides'
-//]
-
 protobuf {
     protoc {
         artifact = "com.google.protobuf:protoc:$latestVersion"
@@ -188,7 +171,7 @@ task taskJar(type: Jar, dependsOn: compileJava) {
 shadowJar {
     classifier = 'fat'
     manifest {
-        attributes "Main-Verticle": mainVerticleName
+        attributes "Main-Verticle": startVerticleName
         attributes "Multi-Release": true
     }
     mergeServiceFiles {
@@ -197,7 +180,10 @@ shadowJar {
 }
 
 run {
-    args = ['run', mainVerticleName, "--redeploy=$watchForChange", "--launcher-class=$mainClassName", "--on-redeploy=$doOnChange"]
+    args = ['run', startVerticleName, "--redeploy=$watchForChange", "--launcher-class=$mainClassName", "--on-redeploy=$doOnChange"]
+    jvmArgs = [
+            "-javaagent:${projectDir}/libs/quasar-core-0.8.0.jar"
+    ]
 }
 
 task copyJars(type: Copy) {

@@ -10,7 +10,7 @@ title = "Configuration"
 
 [runtime]
     service_mode = "dev"
-    payload_format = "protobuf"
+    payload_format2 = "application/json"
     print_debug_info = true
 
 [owner]

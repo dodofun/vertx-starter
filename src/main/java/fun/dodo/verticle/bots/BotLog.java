@@ -12,7 +12,6 @@ import fun.dodo.common.help.RedisUtils;
 import fun.dodo.common.log.AliyunLogService;
 import fun.dodo.common.log.AliyunLogUtils;
 import io.vertx.core.json.JsonObject;
-import io.vertx.reactivex.core.WorkerExecutor;
 import io.vertx.reactivex.core.http.HttpServerRequest;
 import io.vertx.reactivex.core.http.HttpServerResponse;
 import io.vertx.reactivex.ext.web.Router;
@@ -35,7 +34,6 @@ public final class BotLog {
     // JSON处理
     private final Gson gson;
     // 数据代理
-    private WorkerExecutor executor;
     private final Options options;
     private final AliyunLogService logService;
     private final Producer producer;
@@ -60,9 +58,7 @@ public final class BotLog {
 
     }
 
-    public void register(final Router router, final WorkerExecutor executor) {
-
-        this.executor = executor;
+    public void register(final Router router) {
 
         // 添加
         router.post(addPath).blockingHandler(this::addLog, false);

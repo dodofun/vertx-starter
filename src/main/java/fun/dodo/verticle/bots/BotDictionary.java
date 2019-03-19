@@ -25,6 +25,7 @@ import static fun.dodo.common.help.ReqHelper.getParamSafeIntegerValue;
 import static fun.dodo.common.help.ReqHelper.getParamSafeLongValue;
 import static fun.dodo.common.help.ReqHelper.getParamStringValue;
 import static fun.dodo.common.help.ResHelper.*;
+import static io.vertx.ext.sync.Sync.fiberHandler;
 import static io.vertx.reactivex.ext.web.api.validation.ParameterTypeValidator.createLongTypeValidator;
 import static org.apache.http.HttpStatus.SC_OK;
 
@@ -35,7 +36,6 @@ public final class BotDictionary implements BotBase {
 
     // 数据代理
     private final Data data;
-    private WorkerExecutor executor;
 
     final static String VERSION = "v1";
 
@@ -57,9 +57,8 @@ public final class BotDictionary implements BotBase {
     }
 
     @Override
-    public void register(final Router router, final WorkerExecutor executor) {
+    public void register(final Router router) {
 
-        this.executor = executor;
         // 路径参数验证
         HTTPRequestValidationHandler validationHandler =
                 HTTPRequestValidationHandler.create()
@@ -73,15 +72,15 @@ public final class BotDictionary implements BotBase {
                         .addQueryParam(SIZE, ParameterType.INT, false);
 
         // 添加
-        router.post(mainPath).handler(validationHandler).blockingHandler(this::add, false);
+        router.post(mainPath).handler(validationHandler).handler(this::add);
         // 更新
-        router.put(mainPath).handler(validationHandler).blockingHandler(this::update, false);
+        router.put(mainPath).handler(validationHandler).handler(this::update);
         // 获取
-        router.get(mainPath).handler(validationHandler).blockingHandler(this::get, false);
+        router.get(mainPath).handler(validationHandler).handler(this::get);
         // 删除
-        router.delete(mainPath).handler(validationHandler).blockingHandler(this::delete, false);
+        router.delete(mainPath).handler(validationHandler).handler(this::delete);
         // 获取列表
-        router.get(listPath).handler(validationListHandler).blockingHandler(this::getList, false);
+        router.get(listPath).handler(validationListHandler).handler(this::getList);
 
     }
 

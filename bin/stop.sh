@@ -1,5 +1,5 @@
 #!/bin/sh
-APP_MAIN=fun.dodo.verticle.MainVerticle
+APP_MAIN=fun.dodo.verticle.StartVerticle
 
 ./vertx stop $APP_MAIN
 sleep 2

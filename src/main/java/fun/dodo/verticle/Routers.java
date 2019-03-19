@@ -13,7 +13,6 @@ import fun.dodo.verticle.bots.BotDictionary;
 import fun.dodo.verticle.bots.BotLog;
 import fun.dodo.verticle.bots.BotUser;
 import io.vertx.core.http.HttpMethod;
-import io.vertx.reactivex.core.WorkerExecutor;
 import io.vertx.reactivex.core.http.HttpServerRequest;
 import io.vertx.reactivex.ext.web.Router;
 import io.vertx.reactivex.ext.web.RoutingContext;
@@ -38,7 +37,6 @@ public final class Routers {
     private final Options options;
     private final AliyunLogService logService;
     private final Producer producer;
-    private WorkerExecutor executor;
     private final Gson gson;
 
     @Inject
@@ -51,8 +49,7 @@ public final class Routers {
 
     }
 
-    public void routerList(final Router router, final DemoVerticle.ComponentBuilder builder, final WorkerExecutor executor) {
-        this.executor = executor;
+    public void routerList(final Router router, final DemoVerticle.ComponentBuilder builder) {
 
         // 跨域访问设置
         router.route().handler(CorsHandler.create(
@@ -82,16 +79,15 @@ public final class Routers {
         });
 
         final BotDictionary botDictionary = builder.botDictionary();
-        botDictionary.register(router, executor);
+        botDictionary.register(router);
 
         final BotLog botLog = builder.botLog();
-        botLog.register(router, executor);
+        botLog.register(router);
 
         final BotUser botUser = builder.botUser();
-        botUser.register(router, executor);
+        botUser.register(router);
 
         router.route().failureHandler(ctx -> {
-           LOGGER.error("错误!");
             EchoOne echo = new EchoOne();
             echo.getHead().setCode(-2).setItemCount(0).setMessage("调用出错");
             echo.getBody().setData("");
@@ -107,38 +103,34 @@ public final class Routers {
     public void insertLog(final RoutingContext context) {
         final HttpServerRequest request = context.request();
 
-        executor.executeBlocking(future -> {
-
-            if (options.getRunMode().equals("dev")) {
-                // 打印日志，并通过log4j写入日志系统
-                printRequest(context);
-            } else {
-                // 通过SDK写入日志系统
-                List<LogItem> logItemList = new ArrayList<>();
-                LogItem logItem = new LogItem();
-                logItem.PushBack("scheme", request.scheme());
-                logItem.PushBack("method", request.method().name());
-                logItem.PushBack("Access", context.normalisedPath());
-                logItem.PushBack("Complete:", context.request().absoluteURI());
-                logItem.PushBack("Client", request.remoteAddress().host());
-                logItem.PushBack("Server", request.localAddress().host());
-                logItem.PushBack("Headers", StringUtil.expressMultiMap(request.headers()));
-                logItem.PushBack("Params", StringUtil.expressMultiMap(request.params()));
-                logItem.PushBack("__topic__", "API_LOG");
-                logItem.PushBack("level", "API");
-                if (!StringUtil.isNullOrEmpty(context.currentRoute().getPath())) {
-                    logItem.PushBack("path", context.currentRoute().getPath());
-                }
-                String bodyString = context.getBodyAsString();
-                if (!StringUtil.isNullOrEmpty(bodyString)) {
-                    logItem.PushBack("Body", bodyString);
-                }
-                logItemList.add(logItem);
-                logService.send(producer, options.getLogProjectName(), options.getLogstore(), logItemList);
-
+        if (options.getRunMode().equals("dev")) {
+            // 打印日志，并通过log4j写入日志系统
+            printRequest(context);
+        } else {
+            // 通过SDK写入日志系统
+            List<LogItem> logItemList = new ArrayList<>();
+            LogItem logItem = new LogItem();
+            logItem.PushBack("scheme", request.scheme());
+            logItem.PushBack("method", request.method().name());
+            logItem.PushBack("Access", context.normalisedPath());
+            logItem.PushBack("Complete:", context.request().absoluteURI());
+            logItem.PushBack("Client", request.remoteAddress().host());
+            logItem.PushBack("Server", request.localAddress().host());
+            logItem.PushBack("Headers", StringUtil.expressMultiMap(request.headers()));
+            logItem.PushBack("Params", StringUtil.expressMultiMap(request.params()));
+            logItem.PushBack("__topic__", "API_LOG");
+            logItem.PushBack("level", "API");
+            if (!StringUtil.isNullOrEmpty(context.currentRoute().getPath())) {
+                logItem.PushBack("path", context.currentRoute().getPath());
             }
+            String bodyString = context.getBodyAsString();
+            if (!StringUtil.isNullOrEmpty(bodyString)) {
+                logItem.PushBack("Body", bodyString);
+            }
+            logItemList.add(logItem);
+            logService.send(producer, options.getLogProjectName(), options.getLogstore(), logItemList);
 
-        }, false, null);
+        }
 
     }
 }

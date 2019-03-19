@@ -11,6 +11,8 @@ import fun.dodo.common.Options;
 import io.lettuce.core.RedisClient;
 import io.lettuce.core.RedisURI;
 import okhttp3.OkHttpClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -33,16 +35,9 @@ import java.util.concurrent.TimeUnit;
 @Module
 public final class Modules {
     // 默认配置文件
-    private static String configFile = "/etc/conf.toml";
+    private static final String configFile = "/etc/conf.toml";
 
-
-    /**
-     * 读取默认的配置文件名称
-     */
-    public static String getConfigFile() {
-        return configFile;
-    }
-
+    private static final Logger LOGGER = LoggerFactory.getLogger(Modules.class);
 
     /**
      * 获取 GSON 全局实例
@@ -67,15 +62,16 @@ public final class Modules {
     public static Toml provideToml() {
         // 启动文件的位置
         final File directory = new File("");
-        configFile = directory.getAbsolutePath() + configFile;
+
+        String config = directory.getAbsolutePath() + configFile;
 
         // 服务器通常是 ./bin/restart.sh 启动的, 需要调整
-        configFile = configFile.replace("/bin", "");
+        config = config.replace("/bin", "");
 
         // 确定配置文件
-        final File file = new File(configFile);
+        final File file = new File(config);
         System.out.println("===============================================================");
-        System.out.println("配置文件: " + configFile);
+        System.out.println("配置文件: " + config);
 
         // 配置读取工具
         final Toml toml;

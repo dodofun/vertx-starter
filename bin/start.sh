@@ -1,7 +1,7 @@
 #!/bin/sh
 JAVA_OPTS="-Xms512m -Xmx2048m"
 
-./vertx stop fun.dodo.verticle.MainVerticle
+./vertx stop fun.dodo.verticle.StartVerticle
 
 ./stop.sh
 
@@ -10,12 +10,12 @@ rm -rf ../logs/*.*
 
 CLASSPATH=.
 CLASSPATH=$CLASSPATH:../etc
-for i in ../dist/*.jar
+for i in ../lib/*.jar
 do
 CLASSPATH=$CLASSPATH:$i
 done
 
-nohup ./vertx run fun.dodo.verticle.MainVerticle > ../log/sys.out 2>&1 &
+nohup ./vertx run fun.dodo.verticle.StartVerticle > ../log/sys.out 2>&1 &
 
 sleep 1
 # free -m
