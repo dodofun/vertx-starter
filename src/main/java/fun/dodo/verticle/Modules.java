@@ -148,7 +148,7 @@ public final class Modules {
         final String type = toml.getString("redis.type", "single");
         final int database = toml.getLong("redis.database", 1L).intValue();
         final String password = toml.getString("redis.password", "");
-        final String host = toml.getString("redis.host_lettuce", "");
+        final String host = toml.getString("redis.host", "");
         final int port = toml.getLong("redis.port", 6379L).intValue();
 
         RedisURI redisUri = RedisURI.Builder.redis(host)

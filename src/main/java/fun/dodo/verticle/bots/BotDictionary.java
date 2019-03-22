@@ -6,7 +6,6 @@ import fun.dodo.common.meta.Dictionary;
 import fun.dodo.common.meta.EchoList;
 import fun.dodo.verticle.data.dictionary.Data;
 import io.vertx.ext.web.api.validation.ParameterType;
-import io.vertx.reactivex.core.WorkerExecutor;
 import io.vertx.reactivex.core.buffer.Buffer;
 import io.vertx.reactivex.core.http.HttpServerRequest;
 import io.vertx.reactivex.ext.web.Router;
@@ -25,7 +24,6 @@ import static fun.dodo.common.help.ReqHelper.getParamSafeIntegerValue;
 import static fun.dodo.common.help.ReqHelper.getParamSafeLongValue;
 import static fun.dodo.common.help.ReqHelper.getParamStringValue;
 import static fun.dodo.common.help.ResHelper.*;
-import static io.vertx.ext.sync.Sync.fiberHandler;
 import static io.vertx.reactivex.ext.web.api.validation.ParameterTypeValidator.createLongTypeValidator;
 import static org.apache.http.HttpStatus.SC_OK;
 
@@ -47,6 +45,7 @@ public final class BotDictionary implements BotBase {
     final static String PROP = "prop";
     final static String INDEX = "index";
     final static String SIZE = "size";
+    final static String REFRESH = "refresh";
 
     final static String mainPath = "/" + VERSION + "/" + OWNER + "/:" + OWNER_ID + "/" + ENTITY + "/:" + ID;
     final static String listPath = "/" + VERSION + "/" + OWNER + "/:" + OWNER_ID + "/" + ENTITY + "s";
@@ -116,7 +115,10 @@ public final class BotDictionary implements BotBase {
                         .setId(id).setOwnerId(ownerId);
 
                 // 持久化存储
-                if (data.add(builder.build())) {
+                boolean result = data.add(builder.build());
+                LOGGER.info("result  {}", result);
+
+                if (result) {
                     echoDoneMessage(context, SC_OK, "success");
                     return;
                 }
@@ -148,7 +150,7 @@ public final class BotDictionary implements BotBase {
             // body 参数格式
             final String contentType = request.getHeader(CONTENT_TYPE);
 
-            Dictionary dictionary = data.get(ownerId, id);
+            Dictionary dictionary = data.get(ownerId, id, 1);
             if (null == dictionary) {
                 echoTransError(context, "Dictionary 数据不存在");
                 return;
@@ -188,7 +190,7 @@ public final class BotDictionary implements BotBase {
                 }
 
                 // 持久化存储
-                if (data.update(builder.build())) {
+                if (builder.isInitialized() && data.update(builder.build())) {
                     echoDoneMessage(context, SC_OK, "success");
                     return;
                 }
@@ -242,9 +244,11 @@ public final class BotDictionary implements BotBase {
         try {
             final long ownerId = Long.valueOf(context.pathParam(OWNER_ID));
             final long dictionaryId = Long.valueOf(context.pathParam(ID));
+            // 是否刷新缓存数据
+            final int refresh = getParamSafeIntegerValue(context.request(), REFRESH);
 
             // 提取伙伴数据
-            final Dictionary dictionary = data.get(ownerId, dictionaryId);
+            final Dictionary dictionary = data.get(ownerId, dictionaryId, refresh);
 
             echoItem(context, dictionary);
             return;
@@ -281,8 +285,12 @@ public final class BotDictionary implements BotBase {
                 pageSize = 20;
             }
 
+            // 是否刷新缓存数据
+            final int refresh = getParamSafeIntegerValue(request, REFRESH);
+
+
             // 提取清单
-            final EchoList echoList = data.getList(ownerId, pageIndex, pageSize);
+            final EchoList echoList = data.getList(ownerId, pageIndex, pageSize, refresh);
 
             echoList(context, echoList.getObjectList(), echoList.getIndex(), echoList.getSize(), echoList.getCount());
 
@@ -312,10 +320,11 @@ public final class BotDictionary implements BotBase {
             try {
                 message = Dictionary.parseFrom(body.getDelegate().getBytes());
             } catch (final Exception e) {
+                e.printStackTrace();
                 echoTransError(context, "解析出错");
             }
         } else {
-            message = (Dictionary) parseJsonToProtobuf(body.toString(), Dictionary.newBuilder());
+            message = (Dictionary) parseJsonToProtobuf(body.getBytes(), Dictionary.newBuilder());
         }
         return message;
     }

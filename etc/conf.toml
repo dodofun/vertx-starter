@@ -27,8 +27,7 @@ title = "Configuration"
 
 [redis]
     type = "single"
-    host = "http://127.0.0.1"
-    host_lettuce = "39.105.90.92"
+    host = "39.105.90.92"
     port = 6379
     database = 2
     password = "DODO.fun2018"

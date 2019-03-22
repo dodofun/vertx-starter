@@ -11,7 +11,6 @@ import fun.dodo.common.log.AliyunLogService;
 import fun.dodo.common.log.AliyunLogUtils;
 import fun.dodo.verticle.bots.BotDictionary;
 import fun.dodo.verticle.bots.BotLog;
-import fun.dodo.verticle.bots.BotUser;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.reactivex.core.http.HttpServerRequest;
 import io.vertx.reactivex.ext.web.Router;
@@ -83,9 +82,6 @@ public final class Routers {
 
         final BotLog botLog = builder.botLog();
         botLog.register(router);
-
-        final BotUser botUser = builder.botUser();
-        botUser.register(router);
 
         router.route().failureHandler(ctx -> {
             EchoOne echo = new EchoOne();

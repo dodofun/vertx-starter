@@ -67,7 +67,7 @@ dependencies {
             "com.google.protobuf:protobuf-java:$latestVersion",
             "com.google.protobuf:protobuf-java-util:$latestVersion",
             "com.google.errorprone:error_prone_annotations:$latestVersion",
-            "com.googlecode.protobuf-java-format:protobuf-java-format:1.2",
+            "com.googlecode.protobuf-java-format:protobuf-java-format:1.4",
             // dagger
             "com.google.dagger:dagger:$latestVersion",
             "com.google.guava:guava:$latestVersion",

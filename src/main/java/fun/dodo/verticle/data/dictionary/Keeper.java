@@ -9,8 +9,8 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkArgument;
@@ -34,18 +34,16 @@ public final class Keeper {
      *
      * @param entity : 模型定义
      */
-    public boolean add(final Dictionary entity) {
+    public boolean add(final Dictionary entity){
         try (Handle handle = dbi.open()) {
             checkArgument(null != entity, "不能为空");
 
             final Dao dao = handle.attach(Dao.class);
 
             int result = dao.add(entity, entity.toByteArray());
-
             return result > 0;
         } catch (final Exception e) {
             LOGGER.error(DATABASE_ACCESS_ERROR + ", {};  {}", e.getMessage(), Arrays.toString(e.getStackTrace()));
-            e.printStackTrace();
         }
         return false;
     }
@@ -98,17 +96,17 @@ public final class Keeper {
     /**
      * 读取 List
      */
-    public Optional<List<Dictionary>> getList(long ownerId) {
+    public Optional<ArrayList<Dictionary>> getList(long ownerId) {
 
         checkArgument(0 < ownerId, "ownerId 应该是大于零的整数");
 
-        Optional<List<Dictionary>> result = Optional.empty();
+        Optional<ArrayList<Dictionary>> result = Optional.empty();
 
         try (Handle handle = dbi.open()) {
 
             final Dao dao = handle.attach(Dao.class);
 
-            List<Dictionary> list = dao.getList(ownerId);
+            ArrayList<Dictionary> list = (ArrayList)dao.getList(ownerId);
 
             if (null != list) {
                 result = Optional.of(list);
