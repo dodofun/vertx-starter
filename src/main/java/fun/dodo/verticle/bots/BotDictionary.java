@@ -1,13 +1,17 @@
 package fun.dodo.verticle.bots;
 
+import com.google.gson.Gson;
+import com.google.protobuf.Any;
+import com.google.protobuf.Message;
 import fun.dodo.common.help.ReqHelper;
 import fun.dodo.common.interfaces.BotBase;
 import fun.dodo.common.meta.Dictionary;
-import fun.dodo.common.meta.EchoList;
+import fun.dodo.common.meta.DictionaryList;
 import fun.dodo.verticle.data.dictionary.Data;
 import io.vertx.ext.web.api.validation.ParameterType;
 import io.vertx.reactivex.core.buffer.Buffer;
 import io.vertx.reactivex.core.http.HttpServerRequest;
+import io.vertx.reactivex.core.http.HttpServerResponse;
 import io.vertx.reactivex.ext.web.Router;
 import io.vertx.reactivex.ext.web.RoutingContext;
 import io.vertx.reactivex.ext.web.api.validation.HTTPRequestValidationHandler;
@@ -16,13 +20,15 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Method;
 import java.time.Instant;
+import java.util.Arrays;
+import java.util.Base64;
+import java.util.List;
 
 import static fun.dodo.common.Constants.*;
-import static fun.dodo.common.help.ReqHelper.getParamSafeIntegerValue;
-import static fun.dodo.common.help.ReqHelper.getParamSafeLongValue;
-import static fun.dodo.common.help.ReqHelper.getParamStringValue;
+import static fun.dodo.common.help.ReqHelper.*;
 import static fun.dodo.common.help.ResHelper.*;
 import static io.vertx.reactivex.ext.web.api.validation.ParameterTypeValidator.createLongTypeValidator;
 import static org.apache.http.HttpStatus.SC_OK;
@@ -31,6 +37,8 @@ import static org.apache.http.HttpStatus.SC_OK;
 @Singleton
 public final class BotDictionary implements BotBase {
     private static final Logger LOGGER = LoggerFactory.getLogger(BotDictionary.class);
+
+    final Gson gson;
 
     // 数据代理
     private final Data data;
@@ -51,7 +59,8 @@ public final class BotDictionary implements BotBase {
     final static String listPath = "/" + VERSION + "/" + OWNER + "/:" + OWNER_ID + "/" + ENTITY + "s";
 
     @Inject
-    public BotDictionary(final Data data) {
+    public BotDictionary(final Gson gson, final Data data) {
+        this.gson = gson;
         this.data = data;
     }
 
@@ -288,11 +297,10 @@ public final class BotDictionary implements BotBase {
             // 是否刷新缓存数据
             final int refresh = getParamSafeIntegerValue(request, REFRESH);
 
-
             // 提取清单
-            final EchoList echoList = data.getList(ownerId, pageIndex, pageSize, refresh);
+            final DictionaryList list = data.getList(ownerId, pageIndex, pageSize, refresh);
 
-            echoList(context, echoList.getObjectList(), echoList.getIndex(), echoList.getSize(), echoList.getCount());
+            echoList(context, list.getObjectList(), list.getIndex(), list.getSize(), list.getCount());
 
             return;
 
@@ -302,6 +310,68 @@ public final class BotDictionary implements BotBase {
 
         echoFoundError(context, "fail");
 
+    }
+
+    /**
+     * 向前端反馈数据
+     *
+     * @param context: HTTP 路由上下文
+     */
+    public void echoList(final RoutingContext context, final List<Dictionary> list, final long index, final long size, final long count) {
+        if (desiredJson(context)) {
+            echoListJson(context, list, count);
+        } else {
+            echoListProto(context, list, index, size, count);
+        }
+    }
+
+
+    /**
+     * 把集合转换为 JSON 格式
+     *
+     * @param context: HTTP 路由上下文
+     * @param list:    对象清单
+     */
+    private void echoListJson(final RoutingContext context, final List<Dictionary> list, final Long count) {
+        final HttpServerResponse response = context.response();
+
+        try {
+            final fun.dodo.common.echo.EchoList echo = new fun.dodo.common.echo.EchoList();
+            echo.getHead().setItemCount(count.intValue()).setMessage("读取清单");
+
+            // 添加到结果集
+            echo.getBody().setData(list);
+
+            response.putHeader(CONTENT_TYPE, CONTENT_TYPE_JSON)
+                    .putHeader(CONTENT_CONTROL, CONTENT_CONTROL_VALUE)
+                    .setStatusCode(HttpServletResponse.SC_OK)
+                    .end(gson.toJson(echo));
+        } catch (final Exception e) {
+            echoTransError(context, Arrays.toString(e.getStackTrace()));
+        }
+    }
+
+
+    /**
+     * 把集合转换为 ProtoBuf 格式
+     *
+     * @param context: HTTP 路由上下文
+     * @param list:    对象清单
+     */
+    private void echoListProto(final RoutingContext context, final List<Dictionary> list, final Long index, final Long size, final Long count) {
+        final HttpServerResponse response = context.response();
+
+        try {
+            final DictionaryList.Builder builder = DictionaryList.newBuilder();
+            builder.addAllObject(list);
+            builder.setIndex(index.intValue()).setSize(size.intValue()).setCount(count.intValue());
+            response.putHeader(CONTENT_TYPE, CONTENT_TYPE_STREAM)
+                    .putHeader(CONTENT_CONTROL, CONTENT_CONTROL_VALUE)
+                    .setStatusCode(HttpServletResponse.SC_OK)
+                    .end(Buffer.buffer(Base64.getEncoder().encode(builder.build().toByteArray())));
+        } catch (final Exception e) {
+            echoTransError(context, Arrays.toString(e.getStackTrace()));
+        }
     }
 
     /***

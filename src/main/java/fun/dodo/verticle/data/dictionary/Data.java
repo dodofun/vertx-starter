@@ -1,6 +1,7 @@
 package fun.dodo.verticle.data.dictionary;
 
 import fun.dodo.common.meta.Dictionary;
+import fun.dodo.common.meta.DictionaryList;
 import fun.dodo.common.meta.EchoList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -76,8 +77,8 @@ public final class Data {
      *
      * @param ownerId
      */
-    public EchoList getList(final long ownerId, final int index, final int size, final int refresh) {
-        EchoList.Builder builder = EchoList.newBuilder();
+    public DictionaryList getList(final long ownerId, final int index, final int size, final int refresh) {
+        DictionaryList.Builder builder = DictionaryList.newBuilder();
         builder.setIndex(index).setSize(size);
         if (refresh == 0) {
             final Optional<List> optRedis = redis.getList(ownerId, index, size);
