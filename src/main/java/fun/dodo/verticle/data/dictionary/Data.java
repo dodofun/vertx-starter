@@ -2,7 +2,6 @@ package fun.dodo.verticle.data.dictionary;
 
 import fun.dodo.common.meta.Dictionary;
 import fun.dodo.common.meta.DictionaryList;
-import fun.dodo.common.meta.EchoList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
