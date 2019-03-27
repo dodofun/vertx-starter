@@ -1,8 +1,6 @@
 package fun.dodo.verticle.bots;
 
 import com.google.gson.Gson;
-import com.google.protobuf.Any;
-import com.google.protobuf.Message;
 import fun.dodo.common.help.ReqHelper;
 import fun.dodo.common.interfaces.BotBase;
 import fun.dodo.common.meta.Dictionary;
