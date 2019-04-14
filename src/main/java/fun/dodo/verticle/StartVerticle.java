@@ -26,9 +26,10 @@ public class StartVerticle extends AbstractVerticle {
         DeploymentOptions options = new DeploymentOptions().setInstances(10)
                 .setWorker(true)
                 .setWorkerPoolName("base-worker")
-                .setWorkerPoolSize(64);
+                .setWorkerPoolSize(512);
 
         vertx.deployVerticle(DemoVerticle.class.getName(), options);
 
+        vertx.deployVerticle(RpcVerticle.class.getName(), new DeploymentOptions().setInstances(10));
     }
 }

@@ -3,15 +3,22 @@ package fun.dodo.verticle;
 import com.aliyun.openservices.aliyun.log.producer.Producer;
 import com.aliyun.openservices.log.common.LogItem;
 import com.google.gson.Gson;
+import examples.GreeterGrpc;
+import examples.HelloRequest;
 import fun.dodo.common.echo.EchoOne;
 import fun.dodo.common.help.*;
 import fun.dodo.common.Options;
 
 import fun.dodo.common.log.AliyunLogService;
 import fun.dodo.common.log.AliyunLogUtils;
+import fun.dodo.common.meta.Dictionary;
+import fun.dodo.common.meta.DictionaryRpcGrpc;
 import fun.dodo.verticle.bots.BotDictionary;
 import fun.dodo.verticle.bots.BotLog;
+import io.grpc.ManagedChannel;
+import io.vertx.core.Vertx;
 import io.vertx.core.http.HttpMethod;
+import io.vertx.grpc.VertxChannelBuilder;
 import io.vertx.reactivex.core.http.HttpServerRequest;
 import io.vertx.reactivex.ext.web.Router;
 import io.vertx.reactivex.ext.web.RoutingContext;
@@ -38,6 +45,9 @@ public final class Routers {
     private final Producer producer;
     private final Gson gson;
 
+    private final GreeterGrpc.GreeterVertxStub stub;
+    private final DictionaryRpcGrpc.DictionaryRpcVertxStub dictionaryRpcVertxStub;
+
     @Inject
     public Routers(final Options options, final AliyunLogService logService, final Gson gson) {
         this.options = options;
@@ -46,6 +56,13 @@ public final class Routers {
         // 获取 producer
         this.producer = AliyunLogUtils.createProducer(options.getLogProjectName(), options.getLogEndpoint(), options.getLogAccessKey(), options.getLogAccessSecret());
 
+        // RPC client
+        ManagedChannel channel = VertxChannelBuilder
+                .forAddress(Vertx.vertx(), "localhost", 8090)
+                .usePlaintext(true)
+                .build();
+        stub = GreeterGrpc.newVertxStub(channel);
+        dictionaryRpcVertxStub = DictionaryRpcGrpc.newVertxStub(channel);
     }
 
     public void routerList(final Router router, final DemoVerticle.ComponentBuilder builder) {
@@ -74,7 +91,40 @@ public final class Routers {
                 });
 
         router.get("/id").handler(ctx -> {
-            ctx.response().end("TEST");
+            try {
+
+                HelloRequest request = HelloRequest.newBuilder().setName("DaHui").build();
+
+                stub.sayHello(request, asyncResponse -> {
+                    if (asyncResponse.succeeded()) {
+
+                        System.out.println("Succeeded " + asyncResponse.result().getMessage());
+                        // 向前端返回数据
+                        ctx.response().end("Msg : " + asyncResponse.result().getMessage());
+
+                    } else {
+                        asyncResponse.cause().printStackTrace();
+                    }
+                });
+
+
+                Dictionary.Builder dictionaryBuilder = Dictionary.newBuilder();
+                dictionaryBuilder.setId(1044155315112l).setOwnerId(1);
+
+                dictionaryRpcVertxStub.get(dictionaryBuilder.build(), asyncResponse -> {
+                    if (asyncResponse.succeeded()) {
+
+                        System.out.println("Succeeded " + asyncResponse.result().getName());
+
+                    } else {
+                        asyncResponse.cause().printStackTrace();
+                    }
+                });
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
         });
 
         final BotDictionary botDictionary = builder.botDictionary();

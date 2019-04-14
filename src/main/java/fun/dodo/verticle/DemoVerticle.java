@@ -72,7 +72,6 @@ public class DemoVerticle extends AbstractVerticle {
                 startFuture.fail(res.cause());
             }
         });
-
     }
 
     /**
@@ -85,5 +84,4 @@ public class DemoVerticle extends AbstractVerticle {
             LOGGER.error("程序退出异常: {}\n {}", e.getMessage(), Arrays.toString(e.getStackTrace()));
         }
     }
-
 }

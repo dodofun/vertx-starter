@@ -5,7 +5,9 @@ import fun.dodo.common.help.ReqHelper;
 import fun.dodo.common.interfaces.BotBase;
 import fun.dodo.common.meta.Dictionary;
 import fun.dodo.common.meta.DictionaryList;
+import fun.dodo.common.meta.DictionaryRpcGrpc;
 import fun.dodo.verticle.data.dictionary.Data;
+import io.vertx.core.Future;
 import io.vertx.ext.web.api.validation.ParameterType;
 import io.vertx.reactivex.core.buffer.Buffer;
 import io.vertx.reactivex.core.http.HttpServerRequest;
@@ -41,6 +43,9 @@ public final class BotDictionary implements BotBase {
     // 数据代理
     private final Data data;
 
+    // rpc
+    private final DictionaryRpcGrpc.DictionaryRpcVertxImplBase service;
+
     final static String VERSION = "v1";
 
     final static String OWNER = "owner";
@@ -60,6 +65,18 @@ public final class BotDictionary implements BotBase {
     public BotDictionary(final Gson gson, final Data data) {
         this.gson = gson;
         this.data = data;
+
+        service = new DictionaryRpcGrpc.DictionaryRpcVertxImplBase() {
+            @Override
+            public void get(Dictionary request, Future<Dictionary> future) {
+                future.complete(data.get(request.getOwnerId(), request.getId(), 0));
+            }
+        };
+
+    }
+
+    public DictionaryRpcGrpc.DictionaryRpcVertxImplBase getService() {
+        return service;
     }
 
     @Override

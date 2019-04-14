@@ -60,7 +60,9 @@ dependencies {
             "io.reactivex.rxjava2:rxjava:$latestVersion",
             "io.vertx:vertx-web-api-contract:$latestVersion",
             "io.vertx:vertx-sync:$vertxVersion",
-
+            // GRPC
+            "io.vertx:vertx-grpc:$latestVersion",
+            "javax.annotation:javax.annotation-api:$latestVersion",
             // Google
             "com.google.code.gson:gson:$latestVersion",
             // ProtoBuf
@@ -153,6 +155,16 @@ dependencies {
 protobuf {
     protoc {
         artifact = "com.google.protobuf:protoc:$latestVersion"
+    }
+    plugins {
+        grpc {
+            artifact = "io.vertx:protoc-gen-grpc-java:1.1.2"
+        }
+    }
+    generateProtoTasks {
+        all()*.plugins {
+            grpc
+        }
     }
 }
 
