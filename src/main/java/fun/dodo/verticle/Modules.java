@@ -196,7 +196,7 @@ public final class Modules {
     }
 
     /**
-     * 获取 配置参数全局实例
+     * 获取 配置参数实例
      */
     @Provides
     @Singleton
