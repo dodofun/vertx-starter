@@ -1,0 +1,60 @@
+syntax = "proto3";
+
+package fun.dodo.common.meta;
+
+option java_multiple_files = true;
+option java_generate_equals_and_hash = true;
+
+option java_package = "fun.dodo.common.meta";
+option java_outer_classname = "DictionaryProto";
+
+option csharp_namespace = "Dodo.common.Meta.KnownTypes";
+
+option objc_class_prefix = "WKM";
+
+// 定义
+message Dictionary {
+    // ID
+    uint64 id = 1;
+    // 所有者ID
+    uint64 ownerId = 2;
+    // 类型
+    uint32 type = 3;
+    // 名称
+    string name = 4;
+    // 说明
+    string notes = 5;
+    // 是否有效
+    bool enabled = 21;
+    // 创建时间: 用长整数表达
+    uint64 createdAt = 22;
+    // 更新时间: 用长整数表达
+    uint64 updatedAt = 23;
+}
+
+// RPC
+message DictionaryList {
+    repeated Dictionary object = 1;
+    uint64 count = 2;
+    uint64 index = 3;
+    uint64 size = 4;
+}
+
+service DictionaryRpc {
+    rpc Get (DictionaryRequest) returns (Dictionary) {}
+    rpc GetList (DictionaryRequest) returns (DictionaryList) {}
+    rpc Add (DictionaryRequest) returns (Dictionary) {}
+    rpc Update (DictionaryRequest) returns (Dictionary) {}
+    rpc Del (DictionaryRequest) returns (Dictionary) {}
+}
+
+message DictionaryRequest {
+    uint64 id = 1;
+    uint64 ownerId = 2;
+    uint32 type = 3;
+    string name = 4;
+    uint32 index = 5;
+    uint32 size = 6;
+    bool enabled = 7;
+    uint32 refresh = 8;
+}
