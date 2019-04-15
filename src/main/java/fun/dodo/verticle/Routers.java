@@ -43,10 +43,11 @@ public final class Routers {
     private final Producer producer;
     private final Gson gson;
 
+    // RPC client
     private final DictionaryRpcGrpc.DictionaryRpcVertxStub dictionaryRpcVertxStub;
 
     @Inject
-    public Routers(final Options options, final AliyunLogService logService, final Gson gson) {
+    public Routers(final Options options, final AliyunLogService logService, final Gson gson, final AppParams appParams) {
         this.options = options;
         this.logService = logService;
         this.gson = gson;
@@ -55,7 +56,7 @@ public final class Routers {
 
         // RPC client
         ManagedChannel channel = VertxChannelBuilder
-                .forAddress(Vertx.vertx(), "localhost", 8090)
+                .forAddress(Vertx.vertx(), appParams.getRpcClientHost(), appParams.getRpcClientPort())
                 .usePlaintext(true)
                 .build();
         dictionaryRpcVertxStub = DictionaryRpcGrpc.newVertxStub(channel);

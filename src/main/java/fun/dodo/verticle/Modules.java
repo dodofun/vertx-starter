@@ -8,11 +8,8 @@ import com.zaxxer.hikari.HikariDataSource;
 import dagger.Module;
 import dagger.Provides;
 import fun.dodo.common.Options;
-import io.grpc.ManagedChannel;
 import io.lettuce.core.RedisClient;
 import io.lettuce.core.RedisURI;
-import io.vertx.core.Vertx;
-import io.vertx.grpc.VertxChannelBuilder;
 import okhttp3.OkHttpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -199,32 +196,22 @@ public final class Modules {
     }
 
     /**
-     * 获取 RPC连接
+     * 获取 配置参数全局实例
      */
     @Provides
-    public static ManagedChannel provideRpcManagedChannel(final Toml toml) {
+    @Singleton
+    public static AppParams provideRpcClient(final Toml toml) {
 
         final String host = toml.getString("rpcClient.host", "");
         final int port = toml.getLong("rpcClient.port", 80L).intValue();
 
-        return VertxChannelBuilder
-                .forAddress(Vertx.vertx(), host, port)
-                .usePlaintext(true)
-                .build();
+        AppParams appParams = new AppParams();
+
+        appParams.setRpcClientHost(host);
+        appParams.setRpcClientPort(port);
+
+        return appParams;
     }
 
-    /**
-     * 获取 RPC连接
-     */
-    @Provides
-    public static ManagedChannel provideRpcManagedChannel2(final Toml toml) {
-
-        final String host = toml.getString("rpcClient.host", "");
-        final int port = toml.getLong("rpcClient.port", 80L).intValue();
-
-        return VertxChannelBuilder
-                .forAddress(Vertx.vertx(), host, port)
-                .usePlaintext(true)
-                .build();
-    }
 }
+
