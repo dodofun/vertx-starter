@@ -5,6 +5,7 @@ import fun.dodo.common.help.ReqHelper;
 import fun.dodo.common.interfaces.BotBase;
 import fun.dodo.common.meta.Dictionary;
 import fun.dodo.common.meta.DictionaryList;
+import fun.dodo.common.meta.DictionaryRequest;
 import fun.dodo.common.meta.DictionaryRpcGrpc;
 import fun.dodo.verticle.data.dictionary.Data;
 import io.vertx.core.Future;
@@ -68,8 +69,24 @@ public final class BotDictionary implements BotBase {
 
         service = new DictionaryRpcGrpc.DictionaryRpcVertxImplBase() {
             @Override
-            public void get(Dictionary request, Future<Dictionary> future) {
-                future.complete(data.get(request.getOwnerId(), request.getId(), 0));
+            public void get(DictionaryRequest request, Future<Dictionary> future) {
+                future.complete(data.get(request.getOwnerId(), request.getId(), request.getRefresh()));
+            }
+            @Override
+            public void getList(DictionaryRequest request, Future<DictionaryList> future) {
+                future.complete(data.getList(request.getOwnerId(), request.getIndex() > 0 ? request.getIndex() : 0, request.getSize() > 0 ? request.getSize() : 20, request.getRefresh()));
+            }
+            @Override
+            public void add(DictionaryRequest request, Future<Dictionary> future) {
+                future.complete(data.get(request.getOwnerId(), request.getId(), request.getRefresh()));
+            }
+            @Override
+            public void update(DictionaryRequest request, Future<Dictionary> future) {
+                future.complete(data.get(request.getOwnerId(), request.getId(), request.getRefresh()));
+            }
+            @Override
+            public void del(DictionaryRequest request, Future<Dictionary> future) {
+                future.complete(data.get(request.getOwnerId(), request.getId(), request.getRefresh()));
             }
         };
 
@@ -128,7 +145,6 @@ public final class BotDictionary implements BotBase {
 
             if (null != message) {
 
-                // TODO body 参数验证
                 if (ReqHelper.wrongString(context, message.getName(), "Name 不能为空")) {
                     return;
                 }

@@ -1,9 +1,6 @@
 package fun.dodo.verticle;
 
 import dagger.Component;
-import examples.GreeterGrpc;
-import examples.HelloReply;
-import examples.HelloRequest;
 import fun.dodo.common.Options;
 import fun.dodo.verticle.bots.BotDictionary;
 import io.vertx.core.Future;
@@ -42,16 +39,8 @@ public class RpcVerticle extends AbstractVerticle {
 
         BotDictionary botDictionary = builder.botDictionary();
 
-
         // RPC server
-        GreeterGrpc.GreeterVertxImplBase service = new GreeterGrpc.GreeterVertxImplBase() {
-            @Override
-            public void sayHello(HelloRequest request, Future<HelloReply> future) {
-                future.complete(HelloReply.newBuilder().setMessage(request.getName()).build());
-            }
-        };
-        VertxServer server = VertxServerBuilder.forAddress(vertx.getDelegate(), "localhost", 8090)
-                .addService(service)
+        VertxServer server = VertxServerBuilder.forPort(vertx.getDelegate(),  options.getRpcPort())
                 .addService(botDictionary.getService())
                 .build();
         server.start(ar -> {

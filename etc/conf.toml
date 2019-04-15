@@ -19,11 +19,16 @@ title = "Configuration"
 [server]
     type = "http"
     port = 8080
+    rpcPort = 8090
 
 [baseClient]
     type = "http"
     host = "dodo.fun"
     port = 80
+
+[rpcClient]
+    host = "localhost"
+    port = 8090
 
 [redis]
     type = "single"
