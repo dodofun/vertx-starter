@@ -202,7 +202,7 @@ public final class Modules {
     @Singleton
     public static AppParams provideRpcClient(final Toml toml) {
 
-        final String host = toml.getString("rpcClient.host", "");
+        final String host = toml.getString("rpcClient.host", "localhost");
         final int port = toml.getLong("rpcClient.port", 80L).intValue();
 
         AppParams appParams = new AppParams();
