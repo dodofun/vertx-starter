@@ -18,3 +18,14 @@ gradle clean build copyJars release
 
 mkdir lib
 cp ./build/libs/*-fat.jar ./lib
+
+# 构建部署目录
+cp -r lib deploy
+cp -r etc deploy
+cp -r bin deploy
+
+# 更新容器
+sh builddocker.sh
+
+# 运行容器
+docker run -d -p 8080:8080 --name vertx dodofun/vertx:lastest /opt/run.sh
