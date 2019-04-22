@@ -19,13 +19,37 @@ gradle clean build copyJars release
 mkdir lib
 cp ./build/libs/*-fat.jar ./lib
 
-# 构建部署目录
+echo "---------- Build Finished---------"
+echo ""
+
+echo "---------- 构建容器 Start---------"
+
+# 构建Docker部署目录
 cp -r lib deploy
 cp -r etc deploy
 cp -r bin deploy
 
-# 更新容器
-sh builddocker.sh
+# 构建容器
+docker build -t dodofun/vertx:latest . -f Dockerfile
+
+echo "---------- 构建容器 Finished---------"
+
+echo "---------- Push容器 Start---------"
+# 上传
+docker push dodofun/vertx:latest
+echo "---------- Push容器 Finished---------"
 
 # 运行容器
-docker run -d -p 8080:8080 --name vertx dodofun/vertx:lastest /opt/run.sh
+docker run -d -p 8080:8080 --name vertx dodofun/vertx:latest /opt/run.sh
+
+# 启动容器
+# docker run -t -i dodofun/vertx:latest /bin/bash
+
+# 关闭所有容器
+# docker stop $(docker ps -a | awk '{ print $1}' | tail -n +2)
+
+# 删除所有容器
+# docker rm $(docker ps -a | awk '{ print $1}' | tail -n +2)
+
+# 删除所有镜像
+# docker rmi $(docker images | awk '{print $3}' |tail -n +2)
