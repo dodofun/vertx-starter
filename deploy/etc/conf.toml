@@ -1,0 +1,70 @@
+title = "Configuration"
+
+[project]
+    id = 1001
+    name = "vertx-starter"
+
+[vertx]
+    pool_size = 1024
+    max_execute_time = 120000
+
+[runtime]
+    service_mode = "dev"
+    payload_format = "application/json"
+    print_debug_info = true
+
+[owner]
+    name = "lh"
+
+[server]
+    type = "http"
+    port = 8080
+    rpcPort = 8090
+
+[baseClient]
+    type = "http"
+    host = "dodo.fun"
+    port = 80
+
+[rpcClient]
+    host = "localhost"
+    port = 8090
+
+[redis]
+    type = "single"
+    host = "39.105.90.92"
+    port = 6379
+    database = 2
+    password = "DODO.fun2018"
+    use_kryo_codec = true
+    use_protobuf_codec = false
+    expire = 3600
+
+[mysql]
+    host = "39.105.90.92"
+    port = 3306
+    username = "root"
+    password = "DODO.fun2018"
+    database = "dodo"
+    driver_name = "com.mysql.jdbc.Driver"
+    timeout = 30000
+    idleTimeout = 600000
+    maxLifetime = 100000
+    minimumIdle = 10
+    maximumPoolSize = 10
+
+[MNS]
+    endpoint = "https://1765638057648149.mns.cn-beijing.aliyuncs.com/"
+    access_key = "ppRgMnfETYaohnZB"
+    access_secret = "5cZqzxkjkIh1aLf6M2FYCmr2cSrMH9"
+    api_log_queue = "api-log"
+
+[aliyunLog]
+    access_key = "LTAINYWU18MsqwwV"
+    access_secret = "vAgmMbtN7lxvIe9cQT8GlOSfPW2117"
+    project_name = "dodo-vr"
+    endpoint = "{project_name}.cn-beijing.log.aliyuncs.com"
+    logstore = "dodo-vr-application-log"
+
+[cors]
+    host = "*"
