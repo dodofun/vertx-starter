@@ -89,10 +89,11 @@ dependencies {
             "org.apache.logging.log4j:log4j-core:$log4jVersion",
             "org.apache.logging.log4j:log4j-slf4j-impl:$log4jVersion",
             "commons-logging:commons-logging:$latestVersion",
+
             // 阿里云日志服务
-            "com.aliyun.openservices:aliyun-log:$latestVersion",
-            "com.aliyun.openservices:aliyun-log-producer:$latestVersion",
-            "com.aliyun.openservices:loghub-client-lib:$latestVersion",
+            "com.aliyun.openservices:aliyun-log:$aliyunLogVersion",
+            "com.aliyun.openservices:aliyun-log-producer:$aliyunLogProducerVersion",
+            "com.aliyun.openservices:loghub-client-lib:$loghubClientLibVersion",
             "joda-time:joda-time:$latestVersion",
 
             // 分布式缓存 -  Redis 驱动 + Java 集合
