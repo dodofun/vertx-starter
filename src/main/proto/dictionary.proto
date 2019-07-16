@@ -32,7 +32,7 @@ message Dictionary {
     uint64 updatedAt = 23;
 }
 
-// RPC
+// 列表
 message DictionaryList {
     repeated Dictionary object = 1;
     uint64 count = 2;
@@ -40,6 +40,7 @@ message DictionaryList {
     uint64 size = 4;
 }
 
+// RPC
 service DictionaryRpc {
     rpc Get (DictionaryRequest) returns (Dictionary) {}
     rpc GetList (DictionaryRequest) returns (DictionaryList) {}
@@ -47,7 +48,7 @@ service DictionaryRpc {
     rpc Update (DictionaryRequest) returns (Dictionary) {}
     rpc Del (DictionaryRequest) returns (Dictionary) {}
 }
-
+// RPC请求参数
 message DictionaryRequest {
     uint64 id = 1;
     uint64 ownerId = 2;
