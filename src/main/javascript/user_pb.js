@@ -1,3 +1,4 @@
+// source: user.proto
 /**
  * @fileoverview
  * @enhanceable
@@ -60,13 +61,15 @@ if (goog.DEBUG && !COMPILED) {
 
 if (jspb.Message.GENERATE_TO_OBJECT) {
 /**
- * Creates an object representation of this proto suitable for use in Soy templates.
+ * Creates an object representation of this proto.
  * Field names that are reserved in JavaScript and will be renamed to pb_name.
+ * Optional fields that are not set will be set to undefined.
  * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
  * For the list of reserved names please see:
- *     com.google.apps.jspb.JsClassTemplate.JS_RESERVED_WORDS.
- * @param {boolean=} opt_includeInstance Whether to include the JSPB instance
- *     for transitional soy proto support: http://goto/soy-param-migration
+ *     net/proto2/compiler/js/internal/generator.cc#kKeyword.
+ * @param {boolean=} opt_includeInstance Deprecated. whether to include the
+ *     JSPB instance for transitional soy proto support:
+ *     http://goto/soy-param-migration
  * @return {!Object}
  */
 proto.fun.dodo.common.meta.User.prototype.toObject = function(opt_includeInstance) {
@@ -76,8 +79,8 @@ proto.fun.dodo.common.meta.User.prototype.toObject = function(opt_includeInstanc
 
 /**
  * Static version of the {@see toObject} method.
- * @param {boolean|undefined} includeInstance Whether to include the JSPB
- *     instance for transitional soy proto support:
+ * @param {boolean|undefined} includeInstance Deprecated. Whether to include
+ *     the JSPB instance for transitional soy proto support:
  *     http://goto/soy-param-migration
  * @param {!proto.fun.dodo.common.meta.User} msg The msg instance to transform.
  * @return {!Object}
@@ -94,7 +97,7 @@ proto.fun.dodo.common.meta.User.toObject = function(includeInstance, msg) {
     username: jspb.Message.getFieldWithDefault(msg, 7, ""),
     password: jspb.Message.getFieldWithDefault(msg, 8, ""),
     notes: jspb.Message.getFieldWithDefault(msg, 20, ""),
-    enabled: jspb.Message.getFieldWithDefault(msg, 21, false),
+    enabled: jspb.Message.getBooleanFieldWithDefault(msg, 21, false),
     createdat: jspb.Message.getFieldWithDefault(msg, 22, 0),
     updatedat: jspb.Message.getFieldWithDefault(msg, 23, 0)
   };
@@ -434,12 +437,10 @@ proto.fun.dodo.common.meta.User.prototype.setNotes = function(value) {
 
 /**
  * optional bool enabled = 21;
- * Note that Boolean fields may be set to 0/1 when serialized from a Java server.
- * You should avoid comparisons like {@code val === true/false} in those cases.
  * @return {boolean}
  */
 proto.fun.dodo.common.meta.User.prototype.getEnabled = function() {
-  return /** @type {boolean} */ (jspb.Message.getFieldWithDefault(this, 21, false));
+  return /** @type {boolean} */ (jspb.Message.getBooleanFieldWithDefault(this, 21, false));
 };
 
 
@@ -491,13 +492,15 @@ proto.fun.dodo.common.meta.UserList.repeatedFields_ = [1];
 
 if (jspb.Message.GENERATE_TO_OBJECT) {
 /**
- * Creates an object representation of this proto suitable for use in Soy templates.
+ * Creates an object representation of this proto.
  * Field names that are reserved in JavaScript and will be renamed to pb_name.
+ * Optional fields that are not set will be set to undefined.
  * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
  * For the list of reserved names please see:
- *     com.google.apps.jspb.JsClassTemplate.JS_RESERVED_WORDS.
- * @param {boolean=} opt_includeInstance Whether to include the JSPB instance
- *     for transitional soy proto support: http://goto/soy-param-migration
+ *     net/proto2/compiler/js/internal/generator.cc#kKeyword.
+ * @param {boolean=} opt_includeInstance Deprecated. whether to include the
+ *     JSPB instance for transitional soy proto support:
+ *     http://goto/soy-param-migration
  * @return {!Object}
  */
 proto.fun.dodo.common.meta.UserList.prototype.toObject = function(opt_includeInstance) {
@@ -507,8 +510,8 @@ proto.fun.dodo.common.meta.UserList.prototype.toObject = function(opt_includeIns
 
 /**
  * Static version of the {@see toObject} method.
- * @param {boolean|undefined} includeInstance Whether to include the JSPB
- *     instance for transitional soy proto support:
+ * @param {boolean|undefined} includeInstance Deprecated. Whether to include
+ *     the JSPB instance for transitional soy proto support:
  *     http://goto/soy-param-migration
  * @param {!proto.fun.dodo.common.meta.UserList} msg The msg instance to transform.
  * @return {!Object}

@@ -8,13 +8,13 @@ rm -rf    ./src/main/javascript
 mkdir -p  ./src/main/javascript
 cd        ./src/main/proto
 clear
-protoc --js_out=import_style=commonjs,binary:../javascript *.proto
+./protoc --js_out=import_style=commonjs,binary:../javascript *.proto
 cd ../../../
 
 echo "---------- ProtoBuf Finished---------"
 echo ""
 
-gradle clean build copyJars release
+sh gradlew clean build copyJars release
 
 mkdir lib
 cp ./build/libs/*-fat.jar ./lib
@@ -22,25 +22,25 @@ cp ./build/libs/*-fat.jar ./lib
 echo "---------- Build Finished---------"
 echo ""
 
-echo "---------- 构建容器 Start---------"
+#echo "---------- 构建容器 Start---------"
 
 # 构建Docker部署目录
-cp -r lib deploy
-cp -r etc deploy
-cp -r bin deploy
+#cp -r lib deploy
+#cp -r etc deploy
+#cp -r bin deploy
 
 # 构建容器
-docker build -t dodofun/vertx:latest . -f Dockerfile
+#docker build -t dodofun/vertx:latest . -f Dockerfile
 
-echo "---------- 构建容器 Finished---------"
+#echo "---------- 构建容器 Finished---------"
 
-echo "---------- Push容器 Start---------"
+#echo "---------- Push容器 Start---------"
 # 上传
-docker push dodofun/vertx:latest
-echo "---------- Push容器 Finished---------"
+#docker push dodofun/vertx:latest
+#echo "---------- Push容器 Finished---------"
 
 # 运行容器
-docker run -p 8090:8080 dodofun/vertx:latest /opt/run.sh
+#docker run -p 8090:8080 dodofun/vertx:latest /opt/run.sh
 
 # 启动容器
 # docker run -t -i dodofun/vertx:latest /bin/bash
