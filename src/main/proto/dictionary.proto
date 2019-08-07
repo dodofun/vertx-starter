@@ -10,7 +10,7 @@ option java_outer_classname = "DictionaryProto";
 
 option csharp_namespace = "Dodo.common.Meta.KnownTypes";
 
-option objc_class_prefix = "WKM";
+option objc_class_prefix = "HLW";
 
 // 定义
 message Dictionary {
@@ -44,10 +44,11 @@ message DictionaryList {
 service DictionaryRpc {
     rpc Get (DictionaryRequest) returns (Dictionary) {}
     rpc GetList (DictionaryRequest) returns (DictionaryList) {}
-    rpc Add (DictionaryRequest) returns (Dictionary) {}
-    rpc Update (DictionaryRequest) returns (Dictionary) {}
-    rpc Del (DictionaryRequest) returns (Dictionary) {}
+    rpc Add (Dictionary) returns (Dictionary) {}
+    rpc Update (Dictionary) returns (Dictionary) {}
+    rpc Del (DictionaryRequest) returns (DictionaryRequest) {}
 }
+
 // RPC请求参数
 message DictionaryRequest {
     uint64 id = 1;

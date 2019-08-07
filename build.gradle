@@ -58,10 +58,10 @@ dependencies {
             "io.vertx:vertx-web:$vertxVersion",
             "io.vertx:vertx-rx-java2:$vertxVersion",
             "io.reactivex.rxjava2:rxjava:$latestVersion",
-            "io.vertx:vertx-web-api-contract:$latestVersion",
+            "io.vertx:vertx-web-api-contract:$vertxVersion",
             "io.vertx:vertx-sync:$vertxVersion",
             // GRPC
-            "io.vertx:vertx-grpc:$latestVersion",
+            "io.vertx:vertx-grpc:$vertxVersion",
             "javax.annotation:javax.annotation-api:$latestVersion",
             // Google
             "com.google.code.gson:gson:$latestVersion",
@@ -150,7 +150,7 @@ dependencies {
 
     )
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    testCompile "io.vertx:vertx-unit:$latestVersion"
+    testCompile "io.vertx:vertx-unit:$vertxVersion"
 }
 
 protobuf {
@@ -159,7 +159,7 @@ protobuf {
     }
     plugins {
         grpc {
-            artifact = "io.vertx:protoc-gen-grpc-java:1.1.2"
+            artifact = "io.grpc:protoc-gen-grpc-java:$latestVersion"
         }
     }
     generateProtoTasks {

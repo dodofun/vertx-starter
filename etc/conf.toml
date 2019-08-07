@@ -50,7 +50,7 @@ title = "Configuration"
     timeout = 30000
     idleTimeout = 600000
     maxLifetime = 100000
-    minimumIdle = 10
+    minimumIdle = 1
     maximumPoolSize = 10
 
 [MNS]

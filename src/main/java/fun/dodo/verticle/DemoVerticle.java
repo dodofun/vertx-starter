@@ -6,7 +6,7 @@ import fun.dodo.verticle.acts.DataStream;
 import fun.dodo.verticle.bots.BotConsumer;
 import fun.dodo.verticle.bots.BotDictionary;
 import fun.dodo.verticle.bots.BotLog;
-import io.vertx.core.Future;
+import io.vertx.core.Promise;
 import io.vertx.reactivex.core.AbstractVerticle;
 import io.vertx.reactivex.ext.web.Router;
 import org.slf4j.Logger;
@@ -38,7 +38,7 @@ public class DemoVerticle extends AbstractVerticle {
     }
 
     @Override
-    public void start(Future<Void> startFuture) {
+    public void start(Promise<Void> startFuture) throws Exception {
 
         // 构建关系链
         final ComponentBuilder builder = DaggerDemoVerticle_ComponentBuilder.create();
@@ -67,9 +67,9 @@ public class DemoVerticle extends AbstractVerticle {
         // 启动服务
         vertx.createHttpServer().requestHandler(router::handle).listen(options.getServerPort(), res -> {
             if (res.succeeded()) {
-                startFuture.complete();
+                System.out.println("启动成功");
             } else {
-                startFuture.fail(res.cause());
+                System.out.println("启动失败");
             }
         });
     }
@@ -78,7 +78,7 @@ public class DemoVerticle extends AbstractVerticle {
      * 停止服务
      */
     @Override
-    public void stop(Future<Void> stopFuture) {
+    public void stop(Promise<Void> startFuture) throws Exception {
         try {
         } catch (final Exception e) {
             LOGGER.error("程序退出异常: {}\n {}", e.getMessage(), Arrays.toString(e.getStackTrace()));

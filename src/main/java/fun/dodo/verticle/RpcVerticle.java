@@ -3,7 +3,7 @@ package fun.dodo.verticle;
 import dagger.Component;
 import fun.dodo.common.Options;
 import fun.dodo.verticle.bots.BotDictionary;
-import io.vertx.core.Future;
+import io.vertx.core.Promise;
 import io.vertx.grpc.VertxServer;
 import io.vertx.grpc.VertxServerBuilder;
 import io.vertx.reactivex.core.AbstractVerticle;
@@ -28,7 +28,7 @@ public class RpcVerticle extends AbstractVerticle {
     }
 
     @Override
-    public void start(Future<Void> startFuture) {
+    public void start(Promise<Void> startFuture) throws Exception {
 
         // 构建关系链
         final ComponentBuilder builder = DaggerRpcVerticle_ComponentBuilder.create();
@@ -57,7 +57,7 @@ public class RpcVerticle extends AbstractVerticle {
      * 停止服务
      */
     @Override
-    public void stop(Future<Void> stopFuture) {
+    public void stop(Promise<Void> startFuture) throws Exception {
         try {
         } catch (final Exception e) {
             LOGGER.error("程序退出异常: {}\n {}", e.getMessage(), Arrays.toString(e.getStackTrace()));

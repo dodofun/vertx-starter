@@ -1,7 +1,7 @@
 package fun.dodo.verticle;
 
 import io.vertx.core.DeploymentOptions;
-import io.vertx.core.Future;
+import io.vertx.core.Promise;
 import io.vertx.core.VertxOptions;
 import io.vertx.reactivex.core.AbstractVerticle;
 import io.vertx.reactivex.core.Vertx;
@@ -13,7 +13,7 @@ public class StartVerticle extends AbstractVerticle {
     private static final Logger LOGGER = LoggerFactory.getLogger(StartVerticle.class);
 
     @Override
-    public void start(Future<Void> startFuture) {
+    public void start(Promise<Void> startFuture) throws Exception {
 
         VertxOptions vertxOptions = new VertxOptions();
         vertxOptions.setBlockedThreadCheckInterval(100000)
@@ -23,13 +23,13 @@ public class StartVerticle extends AbstractVerticle {
 
         vertx = Vertx.vertx(vertxOptions);
 
-        DeploymentOptions options = new DeploymentOptions().setInstances(10)
+        DeploymentOptions options = new DeploymentOptions().setInstances(1)
                 .setWorker(true)
                 .setWorkerPoolName("base-worker")
                 .setWorkerPoolSize(512);
 
         vertx.deployVerticle(DemoVerticle.class.getName(), options);
 
-        vertx.deployVerticle(RpcVerticle.class.getName(), new DeploymentOptions().setInstances(10));
+        vertx.deployVerticle(RpcVerticle.class.getName(), new DeploymentOptions().setInstances(1));
     }
 }

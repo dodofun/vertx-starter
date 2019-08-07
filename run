@@ -1,2 +1,2 @@
 #!/bin/bash
-gradle run
+sh gradlew run

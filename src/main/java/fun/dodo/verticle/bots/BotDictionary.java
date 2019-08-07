@@ -8,7 +8,7 @@ import fun.dodo.common.meta.DictionaryList;
 import fun.dodo.common.meta.DictionaryRequest;
 import fun.dodo.common.meta.DictionaryRpcGrpc;
 import fun.dodo.verticle.data.dictionary.Data;
-import io.vertx.core.Future;
+import io.grpc.stub.StreamObserver;
 import io.vertx.ext.web.api.validation.ParameterType;
 import io.vertx.reactivex.core.buffer.Buffer;
 import io.vertx.reactivex.core.http.HttpServerRequest;
@@ -45,7 +45,7 @@ public final class BotDictionary implements BotBase {
     private final Data data;
 
     // rpc
-    private final DictionaryRpcGrpc.DictionaryRpcVertxImplBase service;
+    private final DictionaryRpcGrpc.DictionaryRpcImplBase service;
 
     final static String VERSION = "v1";
 
@@ -67,32 +67,37 @@ public final class BotDictionary implements BotBase {
         this.gson = gson;
         this.data = data;
 
-        service = new DictionaryRpcGrpc.DictionaryRpcVertxImplBase() {
+        service = new DictionaryRpcGrpc.DictionaryRpcImplBase() {
             @Override
-            public void get(DictionaryRequest request, Future<Dictionary> future) {
-                future.complete(data.get(request.getOwnerId(), request.getId(), request.getRefresh()));
+            public void get(DictionaryRequest request, StreamObserver<Dictionary> responseObserver) {
+                responseObserver.onNext(data.get(request.getOwnerId(), request.getId(), request.getRefresh()));
+                responseObserver.onCompleted();
             }
             @Override
-            public void getList(DictionaryRequest request, Future<DictionaryList> future) {
-                future.complete(data.getList(request.getOwnerId(), request.getIndex() > 0 ? request.getIndex() : 0, request.getSize() > 0 ? request.getSize() : 20, request.getRefresh()));
+            public void getList(DictionaryRequest request, StreamObserver<DictionaryList> responseObserver) {
+                responseObserver.onNext(data.getList(request.getOwnerId(), request.getIndex() > 0 ? request.getIndex() : 0, request.getSize() > 0 ? request.getSize() : 20, request.getRefresh()));
+                responseObserver.onCompleted();
             }
             @Override
-            public void add(DictionaryRequest request, Future<Dictionary> future) {
-                future.complete(data.get(request.getOwnerId(), request.getId(), request.getRefresh()));
+            public void add(Dictionary request, StreamObserver<Dictionary> responseObserver) {
+                responseObserver.onNext(data.add(request) ? request : null);
+                responseObserver.onCompleted();
             }
             @Override
-            public void update(DictionaryRequest request, Future<Dictionary> future) {
-                future.complete(data.get(request.getOwnerId(), request.getId(), request.getRefresh()));
+            public void update(Dictionary request, StreamObserver<Dictionary> responseObserver) {
+                responseObserver.onNext(data.update(request) ? request : null);
+                responseObserver.onCompleted();
             }
             @Override
-            public void del(DictionaryRequest request, Future<Dictionary> future) {
-                future.complete(data.get(request.getOwnerId(), request.getId(), request.getRefresh()));
+            public void del(DictionaryRequest request, StreamObserver<DictionaryRequest> responseObserver) {
+                responseObserver.onNext(data.delete(request.getOwnerId(), request.getId()) ? request : null);
+                responseObserver.onCompleted();
             }
         };
 
     }
 
-    public DictionaryRpcGrpc.DictionaryRpcVertxImplBase getService() {
+    public DictionaryRpcGrpc.DictionaryRpcImplBase getService() {
         return service;
     }
 

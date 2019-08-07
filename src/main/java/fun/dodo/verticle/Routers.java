@@ -2,6 +2,7 @@ package fun.dodo.verticle;
 
 import com.aliyun.openservices.aliyun.log.producer.Producer;
 import com.aliyun.openservices.log.common.LogItem;
+import com.google.common.util.concurrent.ListenableFuture;
 import com.google.gson.Gson;
 import fun.dodo.common.echo.EchoOne;
 import fun.dodo.common.help.*;
@@ -9,11 +10,13 @@ import fun.dodo.common.Options;
 
 import fun.dodo.common.log.AliyunLogService;
 import fun.dodo.common.log.AliyunLogUtils;
+import fun.dodo.common.meta.Dictionary;
 import fun.dodo.common.meta.DictionaryRequest;
 import fun.dodo.common.meta.DictionaryRpcGrpc;
 import fun.dodo.verticle.bots.BotDictionary;
 import fun.dodo.verticle.bots.BotLog;
 import io.grpc.ManagedChannel;
+import io.grpc.stub.StreamObserver;
 import io.vertx.core.Vertx;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.grpc.VertxChannelBuilder;
@@ -44,7 +47,7 @@ public final class Routers {
     private final Gson gson;
 
     // RPC client
-    private final DictionaryRpcGrpc.DictionaryRpcVertxStub dictionaryRpcVertxStub;
+    private final DictionaryRpcGrpc.DictionaryRpcFutureStub dictionaryRpcStub;
 
     @Inject
     public Routers(final Options options, final AliyunLogService logService, final Gson gson, final AppParams appParams) {
@@ -59,7 +62,7 @@ public final class Routers {
                 .forAddress(Vertx.vertx(), appParams.getRpcClientHost(), appParams.getRpcClientPort())
                 .usePlaintext(true)
                 .build();
-        dictionaryRpcVertxStub = DictionaryRpcGrpc.newVertxStub(channel);
+        dictionaryRpcStub = DictionaryRpcGrpc.newFutureStub(channel);
     }
 
     public void routerList(final Router router, final DemoVerticle.ComponentBuilder builder) {
@@ -93,26 +96,13 @@ public final class Routers {
                 DictionaryRequest.Builder dictionaryBuilder = DictionaryRequest.newBuilder();
                 dictionaryBuilder.setId(1044155315112l).setOwnerId(1);
 
-                dictionaryRpcVertxStub.get(dictionaryBuilder.build(), asyncResponse -> {
-                    if (asyncResponse.succeeded()) {
+                ListenableFuture<Dictionary> future = dictionaryRpcStub.get(dictionaryBuilder.build());
+                Dictionary dictionary = future.get();
 
-                        System.out.println("Succeeded " + asyncResponse.result().getName());
-                        ctx.response().end(asyncResponse.result().toString());
+                System.out.println("调用RPC服务成功");
+                System.out.println("Got the server response: " +dictionary.getName());
 
-                    } else {
-                        asyncResponse.cause().printStackTrace();
-                    }
-                });
-
-                dictionaryRpcVertxStub.getList(dictionaryBuilder.build(), asyncResponse -> {
-                    if (asyncResponse.succeeded()) {
-
-                        System.out.println("Succeeded " + asyncResponse.result().getObjectList());
-
-                    } else {
-                        asyncResponse.cause().printStackTrace();
-                    }
-                });
+                ctx.response().end("Hello World !");
 
             } catch (Exception e) {
                 e.printStackTrace();
