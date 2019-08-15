@@ -91,9 +91,10 @@ dependencies {
             "commons-logging:commons-logging:$latestVersion",
 
             // 阿里云日志服务
-            "com.aliyun.openservices:aliyun-log:$aliyunLogVersion",
-            "com.aliyun.openservices:aliyun-log-producer:$aliyunLogProducerVersion",
-            "com.aliyun.openservices:loghub-client-lib:$loghubClientLibVersion",
+            "com.aliyun.openservices:aliyun-log:$latestVersion",
+            "com.aliyun.openservices:aliyun-log-producer:$latestVersion",
+            "com.aliyun.openservices:loghub-client-lib:$latestVersion",
+//            "com.aliyun.openservices:aliyun-log-log4j2-appender:$latestVersion",
             "joda-time:joda-time:$latestVersion",
 
             // 分布式缓存 -  Redis 驱动 + Java 集合
@@ -159,7 +160,7 @@ protobuf {
     }
     plugins {
         grpc {
-            artifact = "io.grpc:protoc-gen-grpc-java:$latestVersion"
+            artifact = "io.grpc:protoc-gen-grpc-java:$protocGenGrpcVersion"
         }
     }
     generateProtoTasks {

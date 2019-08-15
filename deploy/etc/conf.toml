@@ -50,7 +50,7 @@ title = "Configuration"
     timeout = 30000
     idleTimeout = 600000
     maxLifetime = 100000
-    minimumIdle = 10
+    minimumIdle = 1
     maximumPoolSize = 10
 
 [MNS]
@@ -60,11 +60,11 @@ title = "Configuration"
     api_log_queue = "api-log"
 
 [aliyunLog]
-    access_key = "LTAINYWU18MsqwwV"
-    access_secret = "vAgmMbtN7lxvIe9cQT8GlOSfPW2117"
-    project_name = "dodo-vr"
+    access_key = "LTAIINPbsJTAgImW"
+    access_secret = "QNXYl35EhHtMGSsHvbUxRdFnC7GNet"
+    project_name = "dodofun-app"
     endpoint = "{project_name}.cn-beijing.log.aliyuncs.com"
-    logstore = "dodo-vr-application-log"
+    logstore = "dodofun-user"
 
 [cors]
     host = "*"

@@ -1,0 +1,19 @@
+# 环境构建
+FROM centos
+
+MAINTAINER  DODOFUN
+
+ADD jdk /opt/jdk
+
+#配置java环境变量
+ENV JAVA_HOME /opt/jdk
+ENV JRE_HOME $JAVA_HOME/jre
+ENV CLASSPATH $JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar:$JRE_HOME/lib:$CLASSPATH
+ENV PATH $JAVA_HOME/bin:$PATH
+
+#设置系统编码
+RUN yum install kde-l10n-Chinese -y
+RUN yum install glibc-common -y
+RUN localedef -c -f UTF-8 -i zh_CN zh_CN.utf8
+ENV LC_ALL zh_CN.UTF-8
+ENV LANG zh_CN.UTF-8

@@ -45,22 +45,25 @@
         <!--</Async>-->
 
         <!--阿里云日志采集-->
-        <Loghub name="application-log"
-                projectName="dodo-vr"
-                logstore="dodo-vr-application-log"
-                endpoint="dodo-vr.cn-beijing.log.aliyuncs.com"
-                accessKeyId="LTAINYWU18MsqwwV"
-                accessKey="vAgmMbtN7lxvIe9cQT8GlOSfPW2117"
-                packageTimeoutInMS="3000"
-                logsCountPerPackage="4096"
-                logsBytesPerPackage="3145728"
-                memPoolSizeInByte="104857600"
-                retryTimes="3"
-                maxIOThreadSizeInPool="8"
-                topic="DODO VR API"
+        <Loghub name="aliyun-log"
+                project="dodofun-app"
+                logStore="dodofun-user"
+                endpoint="dodofun-app.cn-beijing.log.aliyuncs.com"
+                accessKeyId="LTAIINPbsJTAgImW"
+                accessKeySecret="QNXYl35EhHtMGSsHvbUxRdFnC7GNet"
+                topic="DODO APP API"
                 source=""
                 timeFormat="yyyy-MM-dd HH:mm:ss"
                 timeZone="Asia/Shanghai"
+                totalSizeInBytes="104857600"
+                maxBlockMs="60000"
+                ioThreadCount="8"
+                batchSizeThresholdInBytes="524288"
+                batchCountThreshold="4096"
+                lingerMs="2000"
+                retries="10"
+                baseRetryBackoffMs="100"
+                maxRetryBackoffMs="100"
                 ignoreExceptions="true">
             <!--<PatternLayout pattern="%d{HH:mm:ss.SSS} %-5level %class{36} %L %M - %msg%xEx"/>-->
             <!--<Filters>-->
@@ -85,9 +88,12 @@
         <!--建立一个默认的root的logger-->
         <Root level="INFO">
             <!--<AppenderRef ref="AsyncLog"/>-->
-            <AppenderRef ref="application-log"/>
+            <AppenderRef ref="aliyun-log"/>
             <AppenderRef ref="STDOUT"/>
         </Root>
+        <Logger name="io.lettuce" level="ERROR"/>
+        <Logger name="com.zaxxer" level="ERROR"/>
+        <Logger name="io.vertx" level="ERROR"/>
 
         <!--建立一个特定程序包的logger, 指定 additivity="false" 可以避免输出2次-->
         <!--<Logger name="fun.dodo" level="INFO" additivity="false">-->

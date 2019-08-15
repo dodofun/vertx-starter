@@ -22,25 +22,30 @@ cp ./build/libs/*-fat.jar ./lib
 echo "---------- Build Finished---------"
 echo ""
 
-#echo "---------- 构建容器 Start---------"
+echo "---------- 构建容器 Start---------"
 
 # 构建Docker部署目录
-#cp -r lib deploy
-#cp -r etc deploy
-#cp -r bin deploy
+rm -r deploy
+mkdir deploy
+cp -r lib deploy
+cp -r etc deploy
+cp -r bin deploy
+mkdir deploy/log
 
 # 构建容器
-#docker build -t dodofun/vertx:latest . -f Dockerfile
+docker build -t dodofun/vertx:latest . -f Dockerfile
 
-#echo "---------- 构建容器 Finished---------"
 
-#echo "---------- Push容器 Start---------"
+echo "---------- 构建容器 Finished---------"
+
+echo "---------- Push容器 Start---------"
 # 上传
-#docker push dodofun/vertx:latest
-#echo "---------- Push容器 Finished---------"
+docker push dodofun/vertx:latest
+echo "---------- Push容器 Finished---------"
 
 # 运行容器
-#docker run -p 8090:8080 dodofun/vertx:latest /opt/run.sh
+docker run -d -p 8000:8000 -p 8001:8001 dodofun/vertx:latest
+echo "---------- 服务已启动 ---------"
 
 # 启动容器
 # docker run -t -i dodofun/vertx:latest /bin/bash
@@ -53,3 +58,6 @@ echo ""
 
 # 删除所有镜像
 # docker rmi $(docker images | awk '{print $3}' |tail -n +2)
+
+# 构建环境容器
+# docker build -t dodofun/jdk:latest -f DockerfileEnv .

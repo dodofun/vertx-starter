@@ -16,7 +16,6 @@ import fun.dodo.common.meta.DictionaryRpcGrpc;
 import fun.dodo.verticle.bots.BotDictionary;
 import fun.dodo.verticle.bots.BotLog;
 import io.grpc.ManagedChannel;
-import io.grpc.stub.StreamObserver;
 import io.vertx.core.Vertx;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.grpc.VertxChannelBuilder;
@@ -158,7 +157,6 @@ public final class Routers {
             }
             logItemList.add(logItem);
             logService.send(producer, options.getLogProjectName(), options.getLogstore(), logItemList);
-
         }
 
     }
