@@ -18,8 +18,8 @@ title = "Configuration"
 
 [server]
     type = "http"
-    port = 8080
-    rpcPort = 8090
+    port = 8000
+    rpcPort = 8001
 
 [baseClient]
     type = "http"
@@ -28,7 +28,7 @@ title = "Configuration"
 
 [rpcClient]
     host = "localhost"
-    port = 8090
+    port = 8001
 
 [redis]
     type = "single"
