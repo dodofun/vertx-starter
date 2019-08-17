@@ -2,12 +2,18 @@
 name='user'
 upper='User'
 
+# 代码生成
 rm -rf $name
 cp -r dictionary $name
 cd $name
 perl -p -i -e "s/Dictionary/$upper/g" ./*
 perl -p -i -e "s/dictionary/$name/g" ./*
 mv BotDictionary.java 'Bot'$upper'.java'
-cd ..
+mv dictionary.proto $name'.proto'
 
 echo '代码生成完毕.'
+
+# 代码分发
+cp 'Bot'$upper'.java' ../../src/main/java/fun/dodo/verticle/bots/'Bot'$upper'.java'
+
+echo '代码分发完毕.'
