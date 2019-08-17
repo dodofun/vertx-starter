@@ -63,5 +63,9 @@ echo "---------- Push容器到阿里云容器 Finished---------"
 # 删除所有镜像
 # docker rmi -f $(docker images | awk '{print $3}' |tail -n +2)
 
+# 删除 tag 为 none 的 镜像
+# docker rmi `docker images|grep none| awk '{print $3}'` -f
+
+
 # 构建JDK环境容器
 # docker build -t dodofun/jdk:latest -f DockerfileEnv .

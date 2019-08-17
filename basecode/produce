@@ -1,6 +1,7 @@
 #!/bin/bash
 name='user'
 upper='User'
+baseJavaPath='../../src/main/java/fun/dodo/verticle'
 
 # 代码生成
 rm -rf $name
@@ -14,6 +15,28 @@ mv dictionary.proto $name'.proto'
 echo '代码生成完毕.'
 
 # 代码分发
-cp 'Bot'$upper'.java' ../../src/main/java/fun/dodo/verticle/bots/'Bot'$upper'.java'
+cp 'Bot'$upper'.java' $baseJavaPath'/bots/Bot'$upper'.java'
+cp $name'.proto' ../../src/main/proto
+
+dataPath=$baseJavaPath'/data/'$name
+rm -rf $dataPath
+mkdir $dataPath
+
+cp Dao.java $dataPath
+cp Data.java $dataPath
+cp Keeper.java $dataPath
+cp Mapper.java $dataPath
+cp Redis.java $dataPath
 
 echo '代码分发完毕.'
+
+cd ../../
+echo '当前路径：'
+pwd
+
+# 添加到git
+git add
+
+echo '开始构建项目'
+./pack
+echo '构建项目完成'
